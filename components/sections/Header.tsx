@@ -36,7 +36,7 @@ export function Header() {
             : "bg-paper border-b border-ink/[0.07]"
         }`}
       >
-        <div className="container-page flex items-center justify-between h-16 md:h-[68px]">
+        <div className="container-page flex items-center justify-between h-20 md:h-[80px]">
 
           {/* ─── Logo ─── */}
           <Link
@@ -47,9 +47,9 @@ export function Header() {
             <Image
               src="/logo.png"
               alt="Звук Вокруг"
-              width={200}
-              height={140}
-              className="h-14 w-auto object-contain"
+              width={280}
+              height={200}
+              className="h-[60px] w-auto object-contain"
               priority
             />
           </Link>
