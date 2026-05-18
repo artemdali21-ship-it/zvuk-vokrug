@@ -4,234 +4,319 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-const REPEAT = 10;
-const LINE = Array(REPEAT).fill("ЗВУК ВОКРУГ").join(" · ") + " · ";
+// Текст для 3D куба — "ЗВУК ВОКРУГ" многократно
+const POEM_HTML = `<p>
+  ЗВУК ВОКРУГ · <span>ЗВУК</span> ВОКРУГ · ЗВУК <span>ВОКРУГ</span> · <span>ЗВУК</span> ВОКРУГ ·
+  ЗВУК <span>ВОКРУГ</span> · ЗВУК ВОКРУГ · <span>ЗВУК</span> ВОКРУГ · ЗВУК <span>ВОКРУГ</span> ·
+  ЗВУК ВОКРУГ · <span>ЗВУК</span> ВОКРУГ · ЗВУК <span>ВОКРУГ</span> · ЗВУК ВОКРУГ ·
+</p>`;
+
+const BG_URL = "https://i.ibb.co/q3XSxR9W/20250831-120144.jpg";
+const BOY_URL = "https://i.ibb.co/Y4FKvK38/20250831-113022.png";
 
 export function Hero() {
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function scale() {
+    function adjustSize() {
       if (!contentRef.current) return;
       const vw = window.innerWidth;
       const base = 1000;
-      const s = vw < base ? (vw / base) * 0.95 : 1;
-      contentRef.current.style.transform = `scale(${s})`;
-      contentRef.current.style.transformOrigin = "top center";
+      const scale = vw < base ? (vw / base) * 0.9 : 1;
+      contentRef.current.style.transform = `scale(${scale})`;
     }
-    scale();
-    window.addEventListener("resize", scale);
-    return () => window.removeEventListener("resize", scale);
+    adjustSize();
+    window.addEventListener("resize", adjustSize);
+    return () => window.removeEventListener("resize", adjustSize);
   }, []);
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#060608]" style={{ height: "100dvh" }}>
-      <h1 className="sr-only">30 лет звука для Юга России. Аренда звукового, светового и сценического оборудования.</h1>
-
+    <section className="hero-section">
       <style>{`
-        /* ── 3D Room ── */
-        .zv-scene {
-          perspective: 550px;
-          perspective-origin: 50% 42%;
-          position: absolute;
-          inset: 0;
-        }
-        .zv-cube-wrap {
-          transform-style: preserve-3d;
-          position: absolute;
-          inset: 0;
+        /* ── Fonts ── */
+        @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@900&display=swap');
+
+        /* ── Base layout ── */
+        .hero-section {
+          position: relative;
+          width: 100%;
+          height: 100dvh;
+          background: #000;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
-        /* Ceiling */
-        .zv-ceil {
-          position: absolute;
-          left: 0; right: 0; top: 0;
-          height: 56%;
+        .hero-section > .hero-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+        }
+
+        .hero-content {
+          display: block;
+          width: 1000px;
+          height: 562px;
+          position: relative;
           transform-origin: top center;
-          transform: rotateX(-72deg);
-          background: linear-gradient(180deg, #08080f 0%, #0d0d1a 100%);
+        }
+
+        /* ── Full container (holds bg image + cube) ── */
+        .container-full {
+          position: relative;
+          width: 1000px;
+          height: 562px;
           overflow: hidden;
         }
-        /* LED strips on ceiling */
-        .zv-ceil::before {
-          content: '';
+
+        /* ── Background corridor image ── */
+        .backgroundImage {
           position: absolute;
-          left: 8%; right: 8%; top: 22%;
-          height: 1.5px;
-          background: #1C45D6;
-          box-shadow: 0 0 8px 2px rgba(28,69,214,0.7), 0 0 30px 6px rgba(28,69,214,0.3);
-        }
-        .zv-ceil::after {
-          content: '';
-          position: absolute;
-          left: 18%; right: 18%; top: 52%;
-          height: 1px;
-          background: #1C45D6;
-          box-shadow: 0 0 8px 2px rgba(28,69,214,0.5), 0 0 24px 4px rgba(28,69,214,0.2);
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          z-index: 0;
         }
 
-        /* Floor */
-        .zv-floor {
+        /* ── Silhouette image ── */
+        .boyImage {
           position: absolute;
-          left: 0; right: 0; bottom: 0;
-          height: 56%;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          height: 90%;
+          width: auto;
+          z-index: 30;
+          pointer-events: none;
+        }
+
+        /* ── Klein blue hue overlay ── */
+        .animated.hue {
+          position: absolute;
+          inset: 0;
+          z-index: 5;
+          background: rgba(28, 69, 214, 0.28);
+          mix-blend-mode: color;
+          animation: hue-cycle 8s linear infinite;
+          pointer-events: none;
+        }
+        @keyframes hue-cycle {
+          0%   { filter: hue-rotate(0deg)   saturate(1.2); }
+          50%  { filter: hue-rotate(20deg)  saturate(1.5); }
+          100% { filter: hue-rotate(0deg)   saturate(1.2); }
+        }
+
+        /* ── 3D cube scene ── */
+        .cube-scene {
+          position: absolute;
+          inset: 0;
+          perspective: 450px;
+          perspective-origin: 50% 48%;
+          z-index: 10;
+        }
+
+        .cube-scene-reflect {
+          position: absolute;
+          inset: 0;
+          perspective: 450px;
+          perspective-origin: 50% 48%;
+          z-index: 8;
+          transform: scaleY(-1) translateY(-10px);
+          opacity: 0.25;
+          pointer-events: none;
+        }
+
+        .cube {
+          position: relative;
+          width: 1000px;
+          height: 562px;
+          margin: auto;
+          transform-style: preserve-3d;
+        }
+
+        /* ── Cube faces ── */
+        .face {
+          position: absolute;
+          overflow: hidden;
+        }
+
+        /* Top face — ceiling */
+        .face.top {
+          width: 1000px;
+          height: 600px;
+          top: 0;
+          left: 0;
+          transform-origin: top center;
+          transform: rotateX(-90deg);
+          background: rgba(0,0,0,0.5);
+        }
+
+        /* Bottom face — floor */
+        .face.bottom {
+          width: 1000px;
+          height: 600px;
+          bottom: 0;
+          left: 0;
           transform-origin: bottom center;
-          transform: rotateX(72deg);
-          background: linear-gradient(0deg, #08080f 0%, #0d0d14 100%);
+          transform: rotateX(90deg);
+          background: rgba(0,0,0,0.5);
+        }
+
+        /* Front face — transparent (where we look through) */
+        .face.front {
+          width: 1000px;
+          height: 562px;
+          top: 0;
+          left: 0;
+          transform: translateZ(0);
+          background: transparent;
         }
 
         /* Left wall */
-        .zv-left {
-          position: absolute;
-          top: 0; bottom: 0;
+        .face.left {
+          width: 600px;
+          height: 562px;
+          top: 0;
           left: 0;
-          width: 100%;
           transform-origin: left center;
-          transform: rotateY(52deg);
-          display: flex;
-          align-items: center;
-          overflow: hidden;
+          transform: rotateY(90deg);
+          background: rgba(0,5,30,0.55);
         }
 
         /* Right wall */
-        .zv-right {
-          position: absolute;
-          top: 0; bottom: 0;
+        .face.right {
+          width: 600px;
+          height: 562px;
+          top: 0;
           right: 0;
-          width: 100%;
           transform-origin: right center;
-          transform: rotateY(-52deg);
-          display: flex;
-          align-items: center;
-          overflow: hidden;
+          transform: rotateY(-90deg);
+          background: rgba(0,5,30,0.55);
         }
 
         /* Back wall */
-        .zv-back {
-          position: absolute;
-          top: 0; bottom: 0; left: 0; right: 0;
-          transform: translateZ(-560px);
-          display: flex;
-          align-items: center;
-          overflow: hidden;
-          background: rgba(8,8,20,0.6);
+        .face.back {
+          width: 1000px;
+          height: 562px;
+          top: 0;
+          left: 0;
+          transform: translateZ(-600px) rotateY(180deg);
+          background: rgba(0,5,30,0.7);
         }
 
-        /* Marquee tracks */
-        .zv-track {
+        /* ── Scrolling text on faces ── */
+        .face.text p {
+          position: absolute;
+          top: 50%;
+          left: 0;
+          transform: translateY(-50%);
           white-space: nowrap;
-          overflow: hidden;
-          width: 100%;
-          flex-shrink: 0;
-        }
-        .zv-inner {
-          display: inline-flex;
-          animation: zv-run 22s linear infinite;
-        }
-        .zv-inner-rev {
-          display: inline-flex;
-          animation: zv-run-rev 28s linear infinite;
-        }
-        .zv-inner-slow {
-          display: inline-flex;
-          animation: zv-run 36s linear infinite;
-        }
-        @keyframes zv-run {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-        @keyframes zv-run-rev {
-          from { transform: translateX(-50%); }
-          to   { transform: translateX(0); }
-        }
-
-        /* Text shimmer */
-        .zv-txt {
-          font-family: var(--font-inter-tight, 'Inter Tight', sans-serif);
+          margin: 0;
+          padding: 0;
+          font-family: 'Inter Tight', 'Inter', sans-serif;
           font-weight: 900;
-          letter-spacing: -0.025em;
-          background: linear-gradient(90deg,
-            #ffffff 0%,
-            #c5d4ff 30%,
-            #1C45D6 50%,
-            #c5d4ff 70%,
-            #ffffff 100%
-          );
-          background-size: 300%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          animation: zv-shimmer 5s linear infinite;
+          font-size: 62px;
+          letter-spacing: -0.02em;
+          color: rgba(255,255,255,0.92);
+          text-transform: uppercase;
+          animation: scroll-left 18s linear infinite;
+          width: max-content;
         }
-        @keyframes zv-shimmer {
-          from { background-position: 200% center; }
-          to   { background-position: -200% center; }
+        .face.right.text p {
+          animation: scroll-right 22s linear infinite;
+        }
+        .face.back.text p {
+          font-size: 36px;
+          animation: scroll-left 28s linear infinite;
         }
 
-        /* Ambient Klein glow */
-        .zv-glow {
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(ellipse 70% 50% at 50% 40%,
-            rgba(28,69,214,0.14) 0%,
-            transparent 70%
-          );
-          pointer-events: none;
+        .face.text p span {
+          color: #1C45D6;
+          -webkit-text-stroke: 1px rgba(28,69,214,0.5);
         }
 
-        /* Reflection — faded mirror below */
-        .zv-reflect {
-          position: absolute;
-          inset: 0;
-          opacity: 0.18;
-          transform: scaleY(-1);
-          pointer-events: none;
+        @keyframes scroll-left {
+          from { transform: translateX(0) translateY(-50%); }
+          to   { transform: translateX(-55%) translateY(-50%); }
+        }
+        @keyframes scroll-right {
+          from { transform: translateX(-55%) translateY(-50%); }
+          to   { transform: translateX(0)   translateY(-50%); }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .zv-inner, .zv-inner-rev, .zv-inner-slow { animation: none; }
-          .zv-txt { animation: none; background-position: 0% center; }
+          .face.text p,
+          .face.right.text p,
+          .face.back.text p { animation: none; }
+          .animated.hue      { animation: none; }
         }
       `}</style>
 
-      {/* ── 3D scene ── */}
-      <div className="zv-scene">
-        <div className="zv-cube-wrap">
-          <div className="zv-ceil" />
-          <div className="zv-floor" />
+      {/* SEO */}
+      <h1 className="sr-only">30 лет звука для Юга России. Аренда звукового, светового и сценического оборудования.</h1>
 
-          {/* Left wall */}
-          <div className="zv-left">
-            <div className="zv-track">
-              <div className="zv-inner">
-                <span className="zv-txt" style={{ fontSize: 80 }}>{LINE}&nbsp;&nbsp;</span>
-                <span className="zv-txt" style={{ fontSize: 80 }}>{LINE}&nbsp;&nbsp;</span>
+      <div className="hero-container">
+        <div ref={contentRef} className="hero-content">
+          <div className="container-full">
+
+            {/* Background corridor */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="backgroundImage" src={BG_URL} alt="" aria-hidden />
+
+            {/* Klein blue hue overlay */}
+            <div className="animated hue" />
+
+            {/* 3D cube — main */}
+            <div className="cube-scene">
+              <div className="cube">
+                <div className="face top" />
+                <div className="face bottom" />
+                <div className="face front" />
+                <div
+                  className="face left text"
+                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                />
+                <div
+                  className="face right text"
+                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                />
+                <div
+                  className="face back text"
+                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                />
               </div>
             </div>
-          </div>
 
-          {/* Right wall */}
-          <div className="zv-right">
-            <div className="zv-track">
-              <div className="zv-inner-rev">
-                <span className="zv-txt" style={{ fontSize: 80 }}>{LINE}&nbsp;&nbsp;</span>
-                <span className="zv-txt" style={{ fontSize: 80 }}>{LINE}&nbsp;&nbsp;</span>
+            {/* Reflection */}
+            <div className="cube-scene-reflect">
+              <div className="cube">
+                <div className="face top" />
+                <div className="face bottom" />
+                <div className="face front" />
+                <div
+                  className="face left text"
+                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                />
+                <div
+                  className="face right text"
+                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                />
+                <div
+                  className="face back text"
+                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                />
               </div>
             </div>
-          </div>
 
-          {/* Back wall */}
-          <div className="zv-back">
-            <div className="zv-track">
-              <div className="zv-inner-slow">
-                <span className="zv-txt" style={{ fontSize: 40 }}>{LINE}&nbsp;&nbsp;</span>
-                <span className="zv-txt" style={{ fontSize: 40 }}>{LINE}&nbsp;&nbsp;</span>
-              </div>
-            </div>
+            {/* People silhouette */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="boyImage" src={BOY_URL} alt="" aria-hidden />
           </div>
-
-          {/* Ambient glow */}
-          <div className="zv-glow" />
         </div>
       </div>
 
@@ -240,7 +325,7 @@ export function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7, delay: 0.5 }}
-        className="absolute bottom-6 left-6 md:bottom-10 md:left-12 z-40 flex gap-3"
+        className="absolute bottom-6 left-6 md:bottom-10 md:left-12 z-50 flex gap-3"
       >
         <a
           href="tel:+79033710400"
@@ -260,7 +345,7 @@ export function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7, delay: 0.5 }}
-        className="absolute bottom-6 right-6 md:bottom-10 md:right-12 z-40 text-right"
+        className="absolute bottom-6 right-6 md:bottom-10 md:right-12 z-50 text-right"
       >
         <p className="display text-xs md:text-sm font-bold uppercase tracking-[0.14em] text-paper mb-1">
           30 лет звука для Юга России
