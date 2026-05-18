@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -40,24 +41,17 @@ export function Header() {
           {/* ─── Logo ─── */}
           <Link
             href="/"
-            className="group flex items-center gap-1.5 shrink-0"
+            className="shrink-0 hover:opacity-80 transition-opacity duration-200"
             aria-label="Звук Вокруг — на главную"
           >
-            <span
-              aria-hidden
-              className="font-mono text-[11px] text-ink/25 group-hover:text-klein/60 transition-colors duration-200 leading-none select-none"
-            >
-              [
-            </span>
-            <span className="display text-[13px] md:text-sm tracking-[0.14em] text-ink group-hover:text-klein transition-colors duration-200">
-              ЗВУК ВОКРУГ
-            </span>
-            <span
-              aria-hidden
-              className="font-mono text-[11px] text-ink/25 group-hover:text-klein/60 transition-colors duration-200 leading-none select-none"
-            >
-              ]
-            </span>
+            <Image
+              src="/logo.png"
+              alt="Звук Вокруг"
+              width={110}
+              height={77}
+              className="h-9 w-auto object-contain"
+              priority
+            />
           </Link>
 
           {/* ─── Desktop nav ─── */}
