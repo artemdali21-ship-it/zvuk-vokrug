@@ -68,7 +68,7 @@ export function CTA() {
                 src="/final_zvuk.png"
                 alt="Звук Вокруг — концертное мероприятие"
                 fill
-                className="object-cover object-center"
+                className="object-cover object-top"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
               {/* Blue tint overlay matching shader */}
