@@ -21,9 +21,13 @@ export function Hero() {
     function adjustSize() {
       if (!contentRef.current) return;
       const vw = window.innerWidth;
-      const base = 1000;
-      const scale = vw < base ? (vw / base) * 0.9 : 1;
+      const vh = window.innerHeight;
+      // cover: заполняем весь экран, не оставляя чёрных полос
+      const scaleW = vw / 1000;
+      const scaleH = vh / 562;
+      const scale = Math.max(scaleW, scaleH);
       contentRef.current.style.transform = `scale(${scale})`;
+      contentRef.current.style.transformOrigin = "center center";
     }
     adjustSize();
     window.addEventListener("resize", adjustSize);
