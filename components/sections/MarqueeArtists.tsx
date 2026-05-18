@@ -1,30 +1,45 @@
 "use client";
 
+import { useRef } from "react";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { artists } from "@/data/artists";
 import { clients } from "@/data/clients";
 
-function MarqueeRow({
+function MarqueeTrack({
   items,
   direction = "left",
-  color = "text-klein",
-  size = "text-2xl md:text-4xl",
+  speed = "40s",
+  textClass = "text-2xl md:text-4xl",
+  colorClass = "text-klein",
 }: {
   items: string[];
   direction?: "left" | "right";
-  color?: string;
-  size?: string;
+  speed?: string;
+  textClass?: string;
+  colorClass?: string;
 }) {
+  const prefersReducedMotion = useReducedMotion();
+  // Double for seamless loop
   const doubled = [...items, ...items];
-  const animClass =
-    direction === "left" ? "animate-marquee" : "animate-marquee-reverse";
+  const animStyle = prefersReducedMotion
+    ? {}
+    : {
+        animationDuration: speed,
+        animationTimingFunction: "linear",
+        animationIterationCount: "infinite",
+        animationName: direction === "left" ? "marquee" : "marquee-reverse",
+      };
 
   return (
-    <div className="overflow-hidden py-3">
-      <div className={`flex whitespace-nowrap ${animClass}`}>
+    <div className="overflow-hidden py-2 select-none" aria-hidden>
+      <div className="flex whitespace-nowrap w-max" style={animStyle}>
         {doubled.map((item, i) => (
-          <span key={i} className={`display ${size} ${color} mx-4 shrink-0`}>
+          <span
+            key={i}
+            className={`display ${textClass} ${colorClass} shrink-0 mx-3 md:mx-5`}
+          >
             {item}
-            <span className="text-ink2 mx-4">·</span>
+            <span className="mx-3 md:mx-5 text-ink/20">·</span>
           </span>
         ))}
       </div>
@@ -33,20 +48,44 @@ function MarqueeRow({
 }
 
 export function MarqueeArtists() {
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+
   return (
-    <section className="bg-paper py-12 md:py-16 overflow-hidden border-y border-ink/8">
-      <div className="mb-2">
-        <p className="container-page text-xs text-ink2 uppercase tracking-widest mb-4">
+    <motion.section
+      ref={ref}
+      initial={{ opacity: 0 }}
+      animate={inView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.8 }}
+      className="bg-paper py-10 md:py-14 overflow-hidden border-y border-ink/[0.07]"
+    >
+      {/* Row 1: Артисты → */}
+      <div className="mb-1">
+        <p className="container-page text-[10px] text-ink2 uppercase tracking-[0.18em] mb-3">
           Опыт технического сопровождения мероприятий с участием:
         </p>
-        <MarqueeRow items={artists} direction="left" color="text-klein" size="text-2xl md:text-4xl" />
+        <MarqueeTrack
+          items={artists}
+          direction="left"
+          speed="55s"
+          textClass="text-xl md:text-3xl"
+          colorClass="text-klein"
+        />
       </div>
-      <div className="mt-6">
-        <p className="container-page text-xs text-ink2 uppercase tracking-widest mb-4">
+
+      {/* Row 2: Клиенты ← */}
+      <div className="mt-4">
+        <p className="container-page text-[10px] text-ink2 uppercase tracking-[0.18em] mb-3">
           Среди площадок, заказчиков и партнёров в истории проектов:
         </p>
-        <MarqueeRow items={clients} direction="right" color="text-ink2" size="text-xl md:text-2xl" />
+        <MarqueeTrack
+          items={clients}
+          direction="right"
+          speed="38s"
+          textClass="text-lg md:text-2xl"
+          colorClass="text-ink2"
+        />
       </div>
-    </section>
+    </motion.section>
   );
 }

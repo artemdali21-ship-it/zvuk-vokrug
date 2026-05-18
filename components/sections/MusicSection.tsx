@@ -1,47 +1,74 @@
 "use client";
 
+import { useRef, useState, useEffect } from "react";
+import { motion, useInView } from "framer-motion";
 import { MusicCard } from "@/components/ui/MusicCard";
-import { useState, useEffect } from "react";
 
 const AUDIO_SRC = "/audio/funkformer-check-for-real.mp3";
 const COVER_SRC = "/audio/cover.jpg";
 
 export function MusicSection() {
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
   const [assetsReady, setAssetsReady] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // Check if audio file exists without loading it
     fetch(AUDIO_SRC, { method: "HEAD" })
       .then((r) => setAssetsReady(r.ok))
-      .catch(() => setAssetsReady(false));
+      .catch(() => {
+        console.warn("[MusicSection] Audio file not found:", AUDIO_SRC);
+        setAssetsReady(false);
+      });
   }, []);
 
   return (
-    <section className="bg-paper2 py-24">
+    <motion.section
+      ref={ref}
+      initial={{ opacity: 0 }}
+      animate={inView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.8 }}
+      className="bg-paper2 py-24 md:py-32"
+    >
       <div className="container-page flex flex-col items-center text-center">
-        <h2 className="display text-huge text-ink mb-4">
-          Звук, который мы любим.
-        </h2>
-        <p className="text-ink2 max-w-prose mb-12">
-          Трек Ильи Пузикова. Сын — пишет, отец — строит сцены. Это про нашу
-          семью звука.
-        </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-12"
+        >
+          <p className="text-[10px] text-ink2 uppercase tracking-[0.18em] mb-4">
+            Музыка в семье
+          </p>
+          <h2 className="display text-huge text-ink mb-4">
+            Звук, который мы любим.
+          </h2>
+          <p className="text-ink2 max-w-[38ch] mx-auto leading-relaxed">
+            Трек Ильи Пузикова. Сын — пишет, отец — строит сцены.
+            Это про нашу семью звука.
+          </p>
+        </motion.div>
 
-        {assetsReady === false ? (
-          <div className="w-full max-w-sm bg-paper2 border border-ink/10 rounded-lg p-8 text-center opacity-60">
-            <div className="w-full aspect-square bg-paper2 rounded-md mb-5" />
-            <p className="text-sm text-ink2">Трек скоро появится.</p>
-          </div>
-        ) : (
-          <MusicCard
-            src={AUDIO_SRC}
-            poster={COVER_SRC}
-            title="For Real"
-            artist="Funkformer × Check"
-            mainColor="#1C45D6"
-          />
-        )}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {assetsReady === false ? (
+            <div className="w-full max-w-sm bg-paper border border-ink/8 rounded-lg p-8 text-center opacity-50">
+              <div className="w-full aspect-square bg-paper2 rounded-md mb-5" />
+              <p className="text-sm text-ink2">Трек скоро появится.</p>
+            </div>
+          ) : (
+            <MusicCard
+              src={AUDIO_SRC}
+              poster={COVER_SRC}
+              title="For Real"
+              artist="Funkformer × Check"
+              mainColor="#1C45D6"
+            />
+          )}
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }
