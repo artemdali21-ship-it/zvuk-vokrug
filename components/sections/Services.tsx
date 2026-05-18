@@ -13,7 +13,7 @@ const iconMap = {
   Sparkles,
 } as const;
 
-function ServiceCard({
+function ServiceRow({
   service,
   index,
 }: {
@@ -27,20 +27,22 @@ function ServiceCard({
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative bg-paper2 p-8 md:p-10 hover:bg-ink transition-colors duration-500 cursor-default overflow-hidden"
+      transition={{ duration: 0.6, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+      className="group grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-8 py-6 md:py-8 border-t border-ink/10 cursor-default"
     >
-      {/* Klein accent line top */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-klein scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+      {/* Left: icon + title */}
+      <div className="flex items-baseline gap-4">
+        <Icon className="w-4 h-4 text-ink2 group-hover:text-klein transition-colors duration-300 shrink-0 mt-1 self-start translate-y-[2px]" />
+        <h3 className="display text-huge text-ink group-hover:text-klein transition-colors duration-300 relative">
+          {service.title}
+          <span className="absolute bottom-0 left-0 h-[2px] bg-klein w-0 group-hover:w-full transition-all duration-400 origin-left" />
+        </h3>
+      </div>
 
-      <Icon className="w-5 h-5 text-klein mb-8 stroke-[1.5]" />
-
-      <h3 className="display text-2xl md:text-3xl text-ink group-hover:text-paper mb-4 transition-colors duration-500 leading-tight">
-        {service.title}
-      </h3>
-      <p className="text-ink2 group-hover:text-paper/55 text-sm md:text-base leading-relaxed transition-colors duration-500">
+      {/* Right: description */}
+      <p className="text-ink2 text-sm md:text-base leading-relaxed md:self-center md:pt-0 pl-8 md:pl-0">
         {service.description}
       </p>
     </motion.div>
@@ -59,7 +61,7 @@ export function Services() {
           initial={{ opacity: 0, y: 20 }}
           animate={headInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-12 md:mb-16"
+          className="mb-4 md:mb-6"
         >
           <p className="text-xs text-ink2 uppercase tracking-[0.14em] mb-4">
             Аренда профессионального оборудования
@@ -69,10 +71,9 @@ export function Services() {
           </h2>
         </motion.div>
 
-        {/* Bento: 2+3 или 2 col на мобиле */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+        <div>
           {services.map((s, i) => (
-            <ServiceCard key={s.title} service={s} index={i} />
+            <ServiceRow key={s.title} service={s} index={i} />
           ))}
         </div>
       </div>

@@ -110,7 +110,7 @@ export function MusicCard({
 
   return (
     <section
-      className="w-full max-w-sm bg-paper2 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow"
+      className="w-full max-w-xs bg-paper2 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow"
       style={cardStyle}
     >
       <div className="relative w-full aspect-square mb-5 rounded-md overflow-hidden bg-paper">

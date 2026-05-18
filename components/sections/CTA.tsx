@@ -32,8 +32,7 @@ export function CTA() {
             Готовы взяться за вашу площадку.
           </h2>
           <p className="text-paper/50 text-lg mb-14 max-w-xl leading-relaxed">
-            Райдер, тех. карта, монтаж под ключ. Расчёт по описанию
-            мероприятия — в день обращения.
+            Райдер, тех. карта, монтаж под ключ. Расчёт в день обращения.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">

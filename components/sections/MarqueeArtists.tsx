@@ -57,31 +57,31 @@ export function MarqueeArtists() {
       initial={{ opacity: 0 }}
       animate={inView ? { opacity: 1 } : {}}
       transition={{ duration: 0.8 }}
-      className="bg-paper py-10 md:py-14 overflow-hidden border-y border-ink/[0.07]"
+      className="bg-paper py-16 md:py-20 overflow-hidden border-y border-ink/[0.07]"
     >
       {/* Row 1: Артисты → */}
-      <div className="mb-1">
+      <div className="mb-1 marquee-fade">
         <p className="container-page text-[10px] text-ink2 uppercase tracking-[0.18em] mb-3">
           Опыт технического сопровождения мероприятий с участием:
         </p>
         <MarqueeTrack
           items={artists}
           direction="left"
-          speed="55s"
+          speed="70s"
           textClass="text-xl md:text-3xl"
           colorClass="text-klein"
         />
       </div>
 
       {/* Row 2: Клиенты ← */}
-      <div className="mt-4">
+      <div className="mt-4 marquee-fade">
         <p className="container-page text-[10px] text-ink2 uppercase tracking-[0.18em] mb-3">
           Среди площадок, заказчиков и партнёров в истории проектов:
         </p>
         <MarqueeTrack
           items={clients}
           direction="right"
-          speed="38s"
+          speed="50s"
           textClass="text-lg md:text-2xl"
           colorClass="text-ink2"
         />

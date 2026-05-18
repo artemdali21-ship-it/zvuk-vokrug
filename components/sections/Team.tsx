@@ -35,15 +35,16 @@ export function Team() {
         initial={{ opacity: 0, scale: 1.02 }}
         animate={photoInView ? { opacity: 1, scale: 1 } : {}}
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-        className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-paper2"
+        className="relative w-full overflow-hidden bg-paper2"
       >
         <Image
           src="/team/team-bw.jpg"
           alt="Команда Звук Вокруг — одиннадцать человек, Фёдор Пузиков в центре"
-          fill
+          width={1920}
+          height={1080}
           sizes="100vw"
           quality={80}
-          className="object-cover object-center"
+          className="w-full h-auto object-top"
         />
         {/* Subtle gradient bottom for caption readability */}
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-paper/60 to-transparent" />
