@@ -2,7 +2,13 @@
 
 import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
-import { MusicCard } from "@/components/ui/MusicCard";
+import dynamic from "next/dynamic";
+
+// Dynamic import — Howler.js выгружается в отдельный чанк, не в page bundle
+const MusicCard = dynamic(
+  () => import("@/components/ui/MusicCard").then((m) => ({ default: m.MusicCard })),
+  { ssr: false, loading: () => <div className="w-full max-w-sm h-96 bg-paper rounded-lg animate-pulse" /> }
+);
 
 const AUDIO_SRC = "/audio/funkformer-check-for-real.mp3";
 const COVER_SRC = "/audio/cover.jpg";

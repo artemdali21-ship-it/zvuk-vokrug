@@ -3,8 +3,14 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-paper text-ink font-sans antialiased;
+    /* Prevent CLS from scrollbar appearing */
+    overflow-x: hidden;
   }
 
   ::selection {
@@ -13,6 +19,12 @@
 
   * {
     box-sizing: border-box;
+  }
+
+  /* Prevent image layout shift */
+  img {
+    max-width: 100%;
+    height: auto;
   }
 }
 

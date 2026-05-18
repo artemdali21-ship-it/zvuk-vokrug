@@ -50,15 +50,17 @@ export function Hero() {
         оборудования.
       </h1>
 
-      {/* z-10: ЗВУК — за шейдером, едет вверх */}
+      {/* z-10: ЗВУК — за шейдером, едет вверх.
+          LCP FIX: opacity не анимируем — текст виден с первого SSR-рендера.
+          Только transform (не влияет на LCP timing). */}
       <motion.div
         style={{ y: zvukY }}
         className="absolute inset-0 z-10 flex items-start justify-start pt-28 md:pt-36 pl-6 md:pl-12 pointer-events-none will-change-transform"
       >
         <motion.span
-          initial={{ y: 40, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          initial={prefersReducedMotion ? false : { y: 30 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           className="display text-[22vw] md:text-[18vw] lg:text-[16vw] leading-[0.82] tracking-[-0.04em] text-ink select-none"
         >
           ЗВУК
@@ -79,9 +81,9 @@ export function Hero() {
         className="absolute inset-0 z-30 flex items-end justify-end pb-32 md:pb-40 pr-6 md:pr-12 pointer-events-none will-change-transform"
       >
         <motion.span
-          initial={{ y: 40, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          initial={prefersReducedMotion ? false : { y: 30 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.85, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
           className="display text-[22vw] md:text-[18vw] lg:text-[16vw] leading-[0.82] tracking-[-0.04em] text-ink select-none"
         >
           ВОКРУГ
@@ -92,7 +94,7 @@ export function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
+        transition={{ duration: 0.7, delay: 0.4 }}
         className="absolute bottom-6 right-6 md:bottom-8 md:right-12 z-40 max-w-md text-right"
       >
         <p className="display text-sm md:text-base font-bold uppercase tracking-wide text-ink mb-1">
@@ -107,7 +109,7 @@ export function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
+        transition={{ duration: 0.7, delay: 0.4 }}
         className="absolute bottom-6 left-6 md:bottom-8 md:left-12 z-40 flex gap-3"
       >
         <a

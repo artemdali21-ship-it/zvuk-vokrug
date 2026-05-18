@@ -42,8 +42,8 @@ export function Team() {
           alt="Команда Звук Вокруг — одиннадцать человек, Фёдор Пузиков в центре"
           fill
           sizes="100vw"
+          quality={80}
           className="object-cover object-center"
-          priority={false}
         />
         {/* Subtle gradient bottom for caption readability */}
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-paper/60 to-transparent" />

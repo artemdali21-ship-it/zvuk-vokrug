@@ -52,6 +52,7 @@ export function GalleryPreview() {
                 alt={photo.alt}
                 fill
                 sizes="(max-width: 768px) 50vw, 33vw"
+                quality={80}
                 className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-600"
               />
               {photo.caption && (

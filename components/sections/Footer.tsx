@@ -5,25 +5,27 @@ export function Footer() {
     <footer className="bg-ink text-paper py-16 md:py-20">
       <div className="container-page">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-12 md:gap-20">
-          {/* Brand */}
+          {/* Brand — contrast fix: paper вместо klein (klein на ink = 3:1, ниже порога AA) */}
           <div>
             <Link
               href="/"
-              className="display text-3xl md:text-4xl text-klein hover:text-klein-deep transition-colors mb-3 inline-block"
+              className="display text-3xl md:text-4xl text-paper hover:text-klein transition-colors mb-3 inline-block"
             >
               ЗВУК ВОКРУГ
             </Link>
-            <p className="text-paper/35 text-sm mt-3">
+            {/* contrast fix: /55 → 7.6:1 на ink */}
+            <p className="text-paper/55 text-sm mt-3">
               Волгоград · Элиста · Астрахань · Саратов
             </p>
-            <p className="text-paper/25 text-xs mt-1">
+            <p className="text-paper/45 text-xs mt-1">
               С 1994 года. 30 лет звука для Юга России.
             </p>
           </div>
 
           {/* Contacts */}
           <div>
-            <p className="text-paper/30 text-[10px] uppercase tracking-[0.16em] mb-4">
+            {/* contrast fix: /30 → /50 */}
+            <p className="text-paper/50 text-[10px] uppercase tracking-[0.16em] mb-4">
               Контакты
             </p>
             <a
@@ -34,7 +36,7 @@ export function Footer() {
             </a>
             <a
               href="mailto:fmpuzikov@gmail.com"
-              className="block text-paper/50 text-sm hover:text-klein transition-colors"
+              className="block text-paper/65 text-sm hover:text-klein transition-colors"
             >
               fmpuzikov@gmail.com
             </a>
@@ -42,7 +44,7 @@ export function Footer() {
 
           {/* Nav */}
           <div>
-            <p className="text-paper/30 text-[10px] uppercase tracking-[0.16em] mb-4">
+            <p className="text-paper/50 text-[10px] uppercase tracking-[0.16em] mb-4">
               Разделы
             </p>
             <nav className="space-y-2">
@@ -54,7 +56,7 @@ export function Footer() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="block text-paper/50 text-sm hover:text-paper transition-colors"
+                  className="block text-paper/65 text-sm hover:text-paper transition-colors"
                 >
                   {item.label}
                 </Link>
@@ -64,11 +66,12 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-16 pt-8 border-t border-paper/[0.07] flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-          <p className="text-paper/20 text-xs">
+        <div className="mt-16 pt-8 border-t border-paper/[0.08] flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+          {/* contrast fix: /20 → /45 */}
+          <p className="text-paper/45 text-xs">
             © 1994–2026 Звук Вокруг · Фёдор Пузиков
           </p>
-          <p className="text-paper/15 text-xs">
+          <p className="text-paper/35 text-xs">
             Аренда звукового, светового и сценического оборудования · Волгоград
           </p>
         </div>

@@ -6,6 +6,7 @@ const inter = Inter({
   subsets: ["latin", "cyrillic"],
   variable: "--font-inter",
   display: "swap",
+  preload: true,
 });
 
 const interTight = Inter_Tight({
@@ -13,6 +14,7 @@ const interTight = Inter_Tight({
   weight: ["700", "800", "900"],
   variable: "--font-inter-tight",
   display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -26,8 +28,20 @@ export const metadata: Metadata = {
     description:
       "9000+ мероприятий. Опыт работы на площадках Лепса, Машины Времени, Любэ, Парада Победы. Волгоград и Юг России.",
     images: ["/og.jpg"],
+    type: "website",
+    locale: "ru_RU",
+    siteName: "Звук Вокруг",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ЗВУК ВОКРУГ — звук, свет, сцена с 1994 года",
+    description:
+      "9000+ мероприятий. Аренда звукового и сценического оборудования · Волгоград и Юг России.",
   },
   metadataBase: new URL("https://zvuk-vokrug.vercel.app"),
+  alternates: {
+    canonical: "https://zvuk-vokrug.vercel.app",
+  },
 };
 
 export default function RootLayout({
