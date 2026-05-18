@@ -157,7 +157,7 @@ export function MusicCard({
         <button
           onClick={() => handleSkip("backward")}
           className="p-2 text-ink2 hover:text-klein transition-colors"
-          title="–10 сек"
+          title="-10 сек"
           aria-label="Назад 10 секунд"
         >
           <SkipBack className="w-6 h-6" />

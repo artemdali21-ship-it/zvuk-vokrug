@@ -25,7 +25,7 @@ export default function Projects() {
             </p>
             <h1 className="display text-huge text-ink mb-4">Проекты.</h1>
             <p className="text-ink2 text-lg max-w-md">
-              9000+ мероприятий за 30 лет. Здесь — часть из них.
+              9000+ мероприятий за 30 лет. Здесь: часть из них.
             </p>
           </div>
         </div>

@@ -69,7 +69,7 @@ export function Footer() {
         <div className="mt-16 pt-8 border-t border-paper/[0.08] flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
           {/* contrast fix: /20 → /45 */}
           <p className="text-paper/45 text-xs">
-            © 1994–2026 Звук Вокруг · Фёдор Пузиков
+            © 1994-2026 Звук Вокруг · Фёдор Пузиков
           </p>
           <p className="text-paper/35 text-xs">
             Аренда звукового, светового и сценического оборудования · Волгоград

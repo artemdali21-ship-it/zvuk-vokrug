@@ -57,7 +57,7 @@ export function Team() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="text-sm text-ink2 text-center"
         >
-          В центре — Фёдор Пузиков. С 1994 года.
+          В центре: Фёдор Пузиков. С 1994 года.
         </motion.p>
       </div>
     </section>

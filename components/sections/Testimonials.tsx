@@ -27,7 +27,7 @@ export function Testimonials() {
             Что ценят заказчики.
           </h2>
           <p className="text-ink2 max-w-md text-lg">
-            Не реклама — рабочие принципы, которые держат 30 лет.
+            Не реклама. Рабочие принципы, которые держат 30 лет.
           </p>
         </motion.div>
 
