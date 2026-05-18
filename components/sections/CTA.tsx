@@ -41,7 +41,7 @@ export function CTA() {
                 className="inline-flex items-center justify-center px-8 py-4 bg-klein text-paper text-base font-medium hover:bg-klein-deep transition-colors duration-200"
               >
                 Позвонить Фёдору
-                <span className="ml-3 text-paper/60 text-sm font-normal whitespace-nowrap hidden sm:inline">
+                <span className="ml-3 text-paper/60 text-sm font-normal whitespace-nowrap hidden md:inline">
                   +7 (903) 371-04-00
                 </span>
               </a>
