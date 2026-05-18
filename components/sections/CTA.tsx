@@ -41,7 +41,7 @@ export function CTA() {
                 className="inline-flex items-center justify-center px-8 py-4 bg-klein text-paper text-base font-medium hover:bg-klein-deep transition-colors duration-200"
               >
                 Позвонить Фёдору
-                <span className="ml-3 text-paper/60 text-sm font-normal">
+                <span className="ml-3 text-paper/60 text-sm font-normal whitespace-nowrap hidden sm:inline">
                   +7 (903) 371-04-00
                 </span>
               </a>
@@ -59,7 +59,7 @@ export function CTA() {
             initial={{ opacity: 0, x: 32 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="relative hidden md:block"
+            className="relative"
           >
             <div className="relative w-full aspect-video overflow-hidden">
               {/* Klein blue shimmer border */}

@@ -281,18 +281,20 @@ export function Hero() {
                 <div className="face top" />
                 <div className="face bottom" />
                 <div className="face front" />
-                <div
-                  className="face left text"
+                <div className="face left text"
                   dangerouslySetInnerHTML={{ __html: POEM_HTML }}
                 />
-                <div
-                  className="face right text"
-                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
-                />
-                <div
-                  className="face back text"
-                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
-                />
+                {/* right/back faces show back-side → scaleX(-1) un-mirrors text */}
+                <div className="face right text">
+                  <div style={{ position: "absolute", inset: 0, transform: "scaleX(-1)" }}
+                    dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                  />
+                </div>
+                <div className="face back text">
+                  <div style={{ position: "absolute", inset: 0, transform: "scaleX(-1)" }}
+                    dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                  />
+                </div>
               </div>
             </div>
 
@@ -302,18 +304,19 @@ export function Hero() {
                 <div className="face top" />
                 <div className="face bottom" />
                 <div className="face front" />
-                <div
-                  className="face left text"
+                <div className="face left text"
                   dangerouslySetInnerHTML={{ __html: POEM_HTML }}
                 />
-                <div
-                  className="face right text"
-                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
-                />
-                <div
-                  className="face back text"
-                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
-                />
+                <div className="face right text">
+                  <div style={{ position: "absolute", inset: 0, transform: "scaleX(-1)" }}
+                    dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                  />
+                </div>
+                <div className="face back text">
+                  <div style={{ position: "absolute", inset: 0, transform: "scaleX(-1)" }}
+                    dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                  />
+                </div>
               </div>
             </div>
 
