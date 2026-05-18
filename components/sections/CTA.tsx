@@ -61,7 +61,7 @@ export function CTA() {
             transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="relative hidden md:block"
           >
-            <div className="relative w-full aspect-[4/3] overflow-hidden">
+            <div className="relative w-full aspect-video overflow-hidden">
               {/* Klein blue shimmer border */}
               <div className="absolute inset-0 ring-1 ring-klein/30 z-10 pointer-events-none" />
               <Image
