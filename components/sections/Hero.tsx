@@ -284,17 +284,12 @@ export function Hero() {
                 <div className="face left text"
                   dangerouslySetInnerHTML={{ __html: POEM_HTML }}
                 />
-                {/* right/back faces show back-side → scaleX(-1) un-mirrors text */}
-                <div className="face right text">
-                  <div style={{ position: "absolute", inset: 0, transform: "scaleX(-1)" }}
-                    dangerouslySetInnerHTML={{ __html: POEM_HTML }}
-                  />
-                </div>
-                <div className="face back text">
-                  <div style={{ position: "absolute", inset: 0, transform: "scaleX(-1)" }}
-                    dangerouslySetInnerHTML={{ __html: POEM_HTML }}
-                  />
-                </div>
+                <div className="face right text"
+                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                />
+                <div className="face back text"
+                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                />
               </div>
             </div>
 
@@ -307,16 +302,12 @@ export function Hero() {
                 <div className="face left text"
                   dangerouslySetInnerHTML={{ __html: POEM_HTML }}
                 />
-                <div className="face right text">
-                  <div style={{ position: "absolute", inset: 0, transform: "scaleX(-1)" }}
-                    dangerouslySetInnerHTML={{ __html: POEM_HTML }}
-                  />
-                </div>
-                <div className="face back text">
-                  <div style={{ position: "absolute", inset: 0, transform: "scaleX(-1)" }}
-                    dangerouslySetInnerHTML={{ __html: POEM_HTML }}
-                  />
-                </div>
+                <div className="face right text"
+                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                />
+                <div className="face back text"
+                  dangerouslySetInnerHTML={{ __html: POEM_HTML }}
+                />
               </div>
             </div>
 
@@ -352,7 +343,7 @@ export function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7, delay: 0.5 }}
-        className="absolute bottom-6 right-6 md:bottom-10 md:right-12 z-50 text-right"
+        className="absolute bottom-6 right-6 md:bottom-10 md:right-12 z-50 text-right hidden md:block"
       >
         <p className="display text-xs md:text-sm font-bold uppercase tracking-[0.14em] text-paper mb-1">
           30 лет звука для Юга России
