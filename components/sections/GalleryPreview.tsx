@@ -1,65 +1,46 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
-import { previewPhotos } from "@/data/photos";
+import { ZoomParallax } from "@/components/ui/ZoomParallax";
+
+// 7 лучших фото для параллакса
+const galleryImages = [
+  { src: "/photos/61721cc2.jpg",  alt: "Концерт — звуковое оборудование" },
+  { src: "/photos/f9e05266.jpg",  alt: "Сцена на открытой площадке" },
+  { src: "/photos/bf925159.jpg",  alt: "Городское событие, Волгоград" },
+  { src: "/photos/48081692.jpg",  alt: "Концерт — световое оборудование" },
+  { src: "/photos/0935157f.jpg",  alt: "Фестиваль, большая сцена" },
+  { src: "/photos/8edb3ea6.jpg",  alt: "Театральное мероприятие" },
+  { src: "/photos/02ac7b6d.jpg",  alt: "Звукорежиссёр за работой" },
+];
 
 export function GalleryPreview() {
-  const headRef = useRef<HTMLDivElement>(null);
-  const headInView = useInView(headRef, { once: true, margin: "-60px" });
-  const gridRef = useRef<HTMLDivElement>(null);
-  const gridInView = useInView(gridRef, { once: true, margin: "-60px" });
-
   return (
-    <section className="bg-paper py-20 md:py-28">
-      <div className="container-page">
-        <motion.div
-          ref={headRef}
-          initial={{ opacity: 0, y: 20 }}
-          animate={headInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-14 gap-6"
+    <section className="bg-ink">
+      {/* Header */}
+      <div className="container-page flex items-end justify-between py-14 md:py-20">
+        <h2 className="display text-huge text-paper">
+          Галерея проектов.
+        </h2>
+        <Link
+          href="/projects"
+          className="px-6 py-3 border border-paper/30 text-paper text-sm font-medium hover:border-paper hover:bg-paper/5 transition-colors shrink-0 hidden md:inline-flex"
         >
-          <div>
-            <h2 className="display text-huge text-ink">Галерея проектов.</h2>
-          </div>
-          <Link
-            href="/projects"
-            className="px-6 py-3 border border-ink text-ink text-sm font-medium hover:bg-ink hover:text-paper transition-colors self-start md:self-auto shrink-0"
-          >
-            Смотреть все →
-          </Link>
-        </motion.div>
+          Смотреть все →
+        </Link>
+      </div>
 
-        <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-          {previewPhotos.map((photo, i) => (
-            <motion.div
-              key={photo.src}
-              initial={{ opacity: 0, y: 16 }}
-              animate={gridInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-              className={`relative overflow-hidden bg-paper2 group ${
-                i === 0 ? "col-span-2 md:col-span-1 aspect-[4/3]" : "aspect-[4/3]"
-              }`}
-            >
-              <Image
-                src={photo.src}
-                alt={photo.alt}
-                fill
-                sizes="(max-width: 768px) 50vw, 33vw"
-                quality={80}
-                className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-600"
-              />
-              {photo.caption && (
-                <div className="absolute inset-x-0 bottom-0 p-3 md:p-4 bg-ink/60 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <p className="text-paper text-xs leading-snug">{photo.caption}</p>
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </div>
+      {/* ZoomParallax */}
+      <ZoomParallax images={galleryImages} />
+
+      {/* Mobile link */}
+      <div className="container-page pb-12 md:hidden">
+        <Link
+          href="/projects"
+          className="inline-flex px-6 py-3 border border-paper/30 text-paper text-sm font-medium hover:border-paper transition-colors"
+        >
+          Смотреть все →
+        </Link>
       </div>
     </section>
   );
