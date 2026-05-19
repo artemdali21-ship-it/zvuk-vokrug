@@ -23,13 +23,17 @@ export function Reviews() {
       transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       <GlowCard>
-        {/* Quote */}
-        <blockquote className="text-ink/75 text-sm leading-relaxed mb-5">
-          &ldquo;{r.text}&rdquo;
+        {/* Decorative quote mark */}
+        <span className="block text-klein/20 leading-none mb-3 select-none" style={{ fontSize: "3.5rem", fontFamily: "Georgia, serif", lineHeight: 1 }}>
+          &ldquo;
+        </span>
+        {/* Quote text — no wrapping quotes, clean read */}
+        <blockquote className="text-ink/80 text-sm leading-relaxed mb-6">
+          {r.text}
         </blockquote>
-        {/* Author — role first (more recognisable), name below */}
+        {/* Author */}
         <div className="flex items-center gap-3 pt-4 border-t border-ink/[0.08]">
-          <div className="w-9 h-9 rounded-full bg-klein/10 border border-klein/25 flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 rounded-full bg-klein/10 border border-klein/20 flex items-center justify-center shrink-0">
             <span className="text-klein text-[9px] font-bold tracking-wide leading-none">
               {r.initials}
             </span>

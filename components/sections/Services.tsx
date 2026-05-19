@@ -64,7 +64,7 @@ export function Services() {
           className="mb-4 md:mb-6"
         >
           <p className="eyebrow text-ink2 mb-4">
-            Аренда и прокат профессионального оборудования
+            Профессиональное оборудование с монтажом
           </p>
           <h2 className="display text-huge text-ink mb-4">
             Звук. Свет. Сцена. Экраны.
