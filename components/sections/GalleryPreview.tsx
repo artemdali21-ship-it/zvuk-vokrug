@@ -23,16 +23,13 @@ export function GalleryPreview() {
           className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-14 gap-6"
         >
           <div>
-            <p className="text-[10px] text-ink2 uppercase tracking-[0.18em] mb-4">
-              Работы
-            </p>
-            <h2 className="display text-huge text-ink">Проекты.</h2>
+            <h2 className="display text-huge text-ink">Галерея проектов.</h2>
           </div>
           <Link
             href="/projects"
             className="px-6 py-3 border border-ink text-ink text-sm font-medium hover:bg-ink hover:text-paper transition-colors self-start md:self-auto shrink-0"
           >
-            Все 26 проектов →
+            Смотреть все →
           </Link>
         </motion.div>
 
