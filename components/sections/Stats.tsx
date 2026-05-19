@@ -7,7 +7,6 @@ const dominant = { value: "30", label: "ЛЕТ", sub: "с 1994 года" };
 
 const secondary = [
   { value: "9 000", suffix: "+", label: "МЕРОПРИЯТИЙ", sub: "за 30 лет" },
-  { value: "4", suffix: "", label: "РЕГИОНА", sub: "Волгоград · Элиста · Астрахань · Саратов" },
   { value: "60", suffix: "+", label: "ТОПОВЫХ АРТИСТОВ", sub: "опыт тех. сопровождения", klein: true },
 ];
 

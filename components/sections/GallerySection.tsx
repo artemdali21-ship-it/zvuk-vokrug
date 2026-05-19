@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
 const photos = [
   { src: "/photos/61721cc2.jpg", label: "КОНЦЕРТЫ И ТУРЫ"   },
   { src: "/photos/f9e05266.jpg", label: "ФЕСТИВАЛИ"         },
@@ -67,18 +65,6 @@ export function GallerySection() {
 
   return (
     <section className="bg-ink py-0 overflow-hidden">
-      {/* Заголовок */}
-      <div className="container-page flex items-end justify-between pt-14 md:pt-20 pb-10 md:pb-14">
-        <p className="eyebrow text-paper/40 mb-4">Специализация · Проекты</p>
-        <h2 className="display text-huge text-paper uppercase">ГАЛЕРЕЯ</h2>
-        <Link
-          href="/projects"
-          className="px-6 py-3 border border-paper/30 text-paper text-sm font-medium hover:border-paper hover:bg-paper/5 transition-colors shrink-0 hidden md:inline-flex"
-        >
-          Все проекты →
-        </Link>
-      </div>
-
       {/* Row 1 */}
       <div className="marquee-fade mb-4 md:mb-5">
         <div
