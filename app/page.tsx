@@ -5,8 +5,7 @@ import { Services } from "@/components/sections/Services";
 import { MarqueeArtists } from "@/components/sections/MarqueeArtists";
 import { Reviews } from "@/components/sections/Reviews";
 import { Testimonials } from "@/components/sections/Testimonials";
-import { EventCategories } from "@/components/sections/EventCategories";
-import { GalleryPreview } from "@/components/sections/GalleryPreview";
+import { GallerySection } from "@/components/sections/GallerySection";
 import { CTA } from "@/components/sections/CTA";
 import { Footer } from "@/components/sections/Footer";
 
@@ -21,8 +20,7 @@ export default function Home() {
         <MarqueeArtists />
         <Reviews />
         <Testimonials />
-        <EventCategories />
-        <GalleryPreview />
+        <GallerySection />
         <CTA />
       </main>
       <Footer />

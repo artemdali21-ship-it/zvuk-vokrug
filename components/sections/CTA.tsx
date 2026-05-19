@@ -29,7 +29,7 @@ export function CTA() {
               Напишите нам
             </p>
             <h2 className="display text-huge text-paper mb-6 max-w-2xl">
-              Готовы предоставить смету.
+              Готовы рассчитать смету.
             </h2>
             <p className="text-paper/50 text-lg mb-14 max-w-xl leading-relaxed">
               Звуковое, световое, сценическое и видеооборудование. Расчёт в день обращения.
