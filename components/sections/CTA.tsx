@@ -25,7 +25,7 @@ export function CTA() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="text-[10px] text-paper/30 uppercase tracking-[0.18em] mb-6">
+            <p className="eyebrow text-paper/40 mb-6">
               Напишите нам
             </p>
             <h2 className="display text-huge text-paper mb-6 max-w-2xl">

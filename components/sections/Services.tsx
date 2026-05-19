@@ -63,7 +63,7 @@ export function Services() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="mb-4 md:mb-6"
         >
-          <p className="text-xs text-ink2 uppercase tracking-[0.14em] mb-4">
+          <p className="eyebrow text-ink2 mb-4">
             Аренда и прокат профессионального оборудования
           </p>
           <h2 className="display text-huge text-ink mb-4">

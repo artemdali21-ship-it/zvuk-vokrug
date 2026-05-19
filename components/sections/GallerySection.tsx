@@ -69,6 +69,7 @@ export function GallerySection() {
     <section className="bg-ink py-0 overflow-hidden">
       {/* Заголовок */}
       <div className="container-page flex items-end justify-between pt-14 md:pt-20 pb-10 md:pb-14">
+        <p className="eyebrow text-paper/40 mb-4">Специализация · Проекты</p>
         <h2 className="display text-huge text-paper uppercase">ГАЛЕРЕЯ</h2>
         <Link
           href="/projects"

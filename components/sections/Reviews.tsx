@@ -53,8 +53,9 @@ export function Reviews() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="mb-12 md:mb-16"
         >
-          <h2 className="display text-huge text-klein uppercase">
-            Отзывы
+          <p className="eyebrow text-ink2 mb-5">Говорят клиенты</p>
+          <h2 className="display text-mega text-klein uppercase">
+            ОТЗЫВЫ
           </h2>
         </motion.div>
 

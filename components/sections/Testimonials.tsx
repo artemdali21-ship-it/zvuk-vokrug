@@ -20,13 +20,11 @@ export function Testimonials() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="mb-14 md:mb-20"
         >
-          <p className="text-[10px] text-ink2 uppercase tracking-[0.18em] mb-4">
-            30 лет в деле
-          </p>
+          <p className="eyebrow text-ink2 mb-5">30 лет в деле</p>
           <h2 className="display text-huge text-ink mb-3">
             Что ценят заказчики.
           </h2>
-          <p className="text-ink2 max-w-md text-lg">
+          <p className="text-ink2 max-w-md text-base md:text-lg leading-relaxed">
             Не реклама. Рабочие принципы, которые держат 30 лет.
           </p>
         </motion.div>
@@ -46,7 +44,7 @@ export function Testimonials() {
                 {p.number}
               </span>
               <div>
-                <h3 className="display text-base md:text-lg text-ink mb-2 group-hover:text-klein transition-colors duration-300">
+                <h3 className="display text-lg md:text-xl text-ink mb-2 group-hover:text-klein transition-colors duration-300">
                   {p.title}
                 </h3>
                 <p className="text-ink2 text-sm leading-relaxed">{p.description}</p>
