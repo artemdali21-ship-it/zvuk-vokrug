@@ -2,6 +2,11 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const WaveBackground = dynamic(() => import("@/components/ui/WaveBackground"), {
+  ssr: false,
+});
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const fade = (delay: number) => ({
@@ -12,20 +17,29 @@ const fade = (delay: number) => ({
 
 export function Hero() {
   return (
-    <section className="relative bg-paper min-h-[100dvh] flex flex-col justify-center overflow-hidden pt-20">
+    <section className="relative bg-ink min-h-[100dvh] flex flex-col justify-center overflow-hidden pt-20">
 
-      {/* Klein blue 2px left accent bar */}
-      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-klein" aria-hidden />
+      {/* Wave shader background */}
+      <WaveBackground darkTheme resolutionScale={0.75} />
 
-      <div className="container-page py-16 md:py-24">
+      {/* Overlay — контраст текста */}
+      <div className="absolute inset-0 bg-ink/50 z-[1]" aria-hidden />
+
+      {/* Klein blue left accent bar */}
+      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-klein z-[2]" aria-hidden />
+
+      <div className="container-page py-16 md:py-24 relative z-[2]">
         {/* Eyebrow */}
-        <motion.p {...fade(0.1)} className="text-[11px] text-ink2 uppercase tracking-[0.22em] mb-8 md:mb-10">
+        <motion.p {...fade(0.1)} className="text-[11px] text-paper/50 uppercase tracking-[0.22em] mb-8 md:mb-10">
           ЗВУК ВОКРУГ · с 1994 года · Волгоград
         </motion.p>
 
-        {/* Main product headline */}
-        <motion.h1 {...fade(0.2)} className="display text-ink leading-[0.95] mb-6 md:mb-8"
-          style={{ fontSize: "clamp(3.5rem, 10vw, 9rem)", letterSpacing: "-0.03em" }}>
+        {/* Main headline */}
+        <motion.h1
+          {...fade(0.2)}
+          className="display text-paper leading-[0.95] mb-6 md:mb-8"
+          style={{ fontSize: "clamp(3.5rem, 10vw, 9rem)", letterSpacing: "-0.03em" }}
+        >
           ЗВУК<br />
           СВЕТ<br />
           СЦЕНА<br />
@@ -33,19 +47,21 @@ export function Hero() {
         </motion.h1>
 
         {/* Descriptor */}
-        <motion.p {...fade(0.35)} className="text-ink2 text-base md:text-xl max-w-lg mb-10 md:mb-12 leading-relaxed">
+        <motion.p {...fade(0.35)} className="text-paper/65 text-base md:text-xl max-w-lg mb-10 md:mb-12 leading-relaxed">
           Комплексное техническое обеспечение мероприятий.
         </motion.p>
 
         {/* Cities */}
-        <motion.p {...fade(0.45)}
-          className="display text-ink uppercase tracking-[0.06em] mb-6 md:mb-8"
-          style={{ fontSize: "clamp(1.1rem, 3vw, 2rem)" }}>
+        <motion.p
+          {...fade(0.45)}
+          className="display text-paper uppercase tracking-[0.06em] mb-6 md:mb-8"
+          style={{ fontSize: "clamp(1.1rem, 3vw, 2rem)" }}
+        >
           Волгоград · Элиста · Астрахань · Саратов
         </motion.p>
 
         {/* Stats */}
-        <motion.p {...fade(0.55)} className="text-ink/60 text-sm md:text-base mb-12 md:mb-16 tabular-nums">
+        <motion.p {...fade(0.55)} className="text-paper/40 text-sm md:text-base mb-12 md:mb-16 tabular-nums">
           30 лет опыта · 9 000+ мероприятий
         </motion.p>
 
@@ -59,19 +75,19 @@ export function Hero() {
           </a>
           <Link
             href="/projects"
-            className="inline-flex items-center justify-center px-7 py-3.5 border border-ink/20 text-ink text-sm font-medium uppercase tracking-[0.1em] hover:border-ink/50 transition-colors"
+            className="inline-flex items-center justify-center px-7 py-3.5 border border-paper/25 text-paper text-sm font-medium uppercase tracking-[0.1em] hover:border-paper/60 transition-colors"
           >
             Проекты
           </Link>
         </motion.div>
       </div>
 
-      {/* Bottom stats line */}
+      {/* Bottom ticker */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.9 }}
-        className="mt-auto border-t border-ink/[0.08]"
+        className="mt-auto border-t border-paper/[0.08] relative z-[2]"
       >
         <div className="container-page py-4 flex items-center gap-6 md:gap-10 overflow-x-auto scrollbar-none">
           {[
@@ -80,7 +96,7 @@ export function Hero() {
             "Парад Победы · 9 Мая",
             "ParkSeason Festival",
           ].map((item, i) => (
-            <span key={i} className="text-[11px] text-ink2 whitespace-nowrap uppercase tracking-[0.12em] shrink-0">
+            <span key={i} className="text-[11px] text-paper/40 whitespace-nowrap uppercase tracking-[0.12em] shrink-0">
               {item}
             </span>
           ))}
