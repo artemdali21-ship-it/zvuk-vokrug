@@ -31,7 +31,6 @@ const photos = [
   { src: "/photos/fe4241cf.jpg", label: "СПОРТИВНЫЕ"        },
 ];
 
-// Две строки — разные фото, разные скорости
 const row1 = photos.slice(0, 13);
 const row2 = photos.slice(13);
 
@@ -63,7 +62,6 @@ function Card({ src, label }: CardProps) {
 }
 
 export function GallerySection() {
-  // Дублируем для бесшовного лупа
   const loop1 = [...row1, ...row1];
   const loop2 = [...row2, ...row2];
 
@@ -80,7 +78,7 @@ export function GallerySection() {
         </Link>
       </div>
 
-      {/* Строка 1 — движется влево */}
+      {/* Row 1 */}
       <div className="marquee-fade mb-4 md:mb-5">
         <div
           className="flex gap-4 md:gap-5 w-max"
@@ -90,7 +88,7 @@ export function GallerySection() {
         </div>
       </div>
 
-      {/* Строка 2 — движется вправо */}
+      {/* Row 2 */}
       <div className="marquee-fade pb-14 md:pb-20">
         <div
           className="flex gap-4 md:gap-5 w-max"

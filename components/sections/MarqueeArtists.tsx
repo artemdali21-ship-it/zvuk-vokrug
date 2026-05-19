@@ -59,7 +59,6 @@ export function MarqueeArtists() {
       transition={{ duration: 0.8 }}
       className="bg-paper py-16 md:py-20 overflow-hidden border-y border-ink/[0.07]"
     >
-      {/* Row 1: Артисты → */}
       <div className="mb-1 marquee-fade">
         <MarqueeTrack
           items={artists}
@@ -70,7 +69,6 @@ export function MarqueeArtists() {
         />
       </div>
 
-      {/* Row 2: Клиенты ← */}
       <div className="mt-4 marquee-fade">
         <MarqueeTrack
           items={clients}

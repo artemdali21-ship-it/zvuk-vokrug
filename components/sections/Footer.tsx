@@ -5,7 +5,6 @@ export function Footer() {
     <footer className="bg-ink text-paper py-16 md:py-20">
       <div className="container-page">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-12 md:gap-20">
-          {/* Brand — contrast fix: paper вместо klein (klein на ink = 3:1, ниже порога AA) */}
           <div>
             <Link
               href="/"
@@ -13,7 +12,6 @@ export function Footer() {
             >
               ЗВУК ВОКРУГ
             </Link>
-            {/* contrast fix: /55 → 7.6:1 на ink */}
             <p className="text-paper/55 text-sm mt-3">
               Волгоград · Элиста · Астрахань · Саратов
             </p>
@@ -24,7 +22,6 @@ export function Footer() {
 
           {/* Contacts */}
           <div>
-            {/* contrast fix: /30 → /50 */}
             <p className="text-paper/50 text-[10px] uppercase tracking-[0.16em] mb-4">
               Контакты
             </p>
@@ -67,7 +64,6 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-16 pt-8 border-t border-paper/[0.08] flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-          {/* contrast fix: /20 → /45 */}
           <p className="text-paper/45 text-xs">
             © 1994-2026 Звук Вокруг · Фёдор Пузиков
           </p>
