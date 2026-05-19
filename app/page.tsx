@@ -3,11 +3,9 @@ import { Hero } from "@/components/sections/Hero";
 import { Stats } from "@/components/sections/Stats";
 import { Services } from "@/components/sections/Services";
 import { MarqueeArtists } from "@/components/sections/MarqueeArtists";
-import { Workflow } from "@/components/sections/Workflow";
-import { Team } from "@/components/sections/Team";
-import { MusicSection } from "@/components/sections/MusicSection";
-import { EventCategories } from "@/components/sections/EventCategories";
+import { Reviews } from "@/components/sections/Reviews";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { EventCategories } from "@/components/sections/EventCategories";
 import { GalleryPreview } from "@/components/sections/GalleryPreview";
 import { CTA } from "@/components/sections/CTA";
 import { Footer } from "@/components/sections/Footer";
@@ -21,11 +19,9 @@ export default function Home() {
         <Stats />
         <Services />
         <MarqueeArtists />
-        <Workflow />
-        <Team />
-        <MusicSection />
-        <EventCategories />
+        <Reviews />
         <Testimonials />
+        <EventCategories />
         <GalleryPreview />
         <CTA />
       </main>

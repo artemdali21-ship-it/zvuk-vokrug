@@ -61,9 +61,6 @@ export function MarqueeArtists() {
     >
       {/* Row 1: Артисты → */}
       <div className="mb-1 marquee-fade">
-        <p className="container-page text-[10px] text-ink2 uppercase tracking-[0.18em] mb-3">
-          Опыт технического сопровождения мероприятий с участием:
-        </p>
         <MarqueeTrack
           items={artists}
           direction="left"
@@ -75,9 +72,6 @@ export function MarqueeArtists() {
 
       {/* Row 2: Клиенты ← */}
       <div className="mt-4 marquee-fade">
-        <p className="container-page text-[10px] text-ink2 uppercase tracking-[0.18em] mb-3">
-          Среди площадок, заказчиков и партнёров в истории проектов:
-        </p>
         <MarqueeTrack
           items={clients}
           direction="right"

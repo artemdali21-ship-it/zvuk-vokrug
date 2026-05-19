@@ -29,10 +29,10 @@ export function CTA() {
               Напишите нам
             </p>
             <h2 className="display text-huge text-paper mb-6 max-w-2xl">
-              Готовы взяться за вашу площадку.
+              Готовы предоставить смету.
             </h2>
             <p className="text-paper/50 text-lg mb-14 max-w-xl leading-relaxed">
-              Райдер, тех. карта, монтаж под ключ. Расчёт в день обращения.
+              Звуковое, световое, сценическое и видеооборудование. Расчёт в день обращения.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">

@@ -64,11 +64,14 @@ export function Services() {
           className="mb-4 md:mb-6"
         >
           <p className="text-xs text-ink2 uppercase tracking-[0.14em] mb-4">
-            Аренда профессионального оборудования
+            Аренда и прокат профессионального оборудования
           </p>
-          <h2 className="display text-huge text-ink">
-            Что мы даём площадке.
+          <h2 className="display text-huge text-ink mb-4">
+            Звук. Свет. Сцена. Экраны.
           </h2>
+          <p className="text-ink2 text-lg max-w-2xl">
+            Мы создаём технические решения для событий любого масштаба — от камерных концертов до городских праздников с десятками тысяч зрителей.
+          </p>
         </motion.div>
 
         <div>

@@ -66,7 +66,7 @@ export const photos: Photo[] = [
   {
     src: "/photos/0a0fc3bf.jpg",
     alt: "Праздничный салют и сцена на мероприятии в Волжском",
-    caption: "400 лет Волжский",
+    caption: "День города, Волжский",
     category: "городские",
   },
   {
