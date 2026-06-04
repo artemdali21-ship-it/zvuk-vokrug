@@ -8,13 +8,11 @@ import { clients } from "@/data/clients";
 function MarqueeTrack({
   items,
   direction = "left",
-  speed = "70s",
   colorClass = "text-white",
   sizeClass = "text-2xl md:text-4xl",
 }: {
   items: string[];
   direction?: "left" | "right";
-  speed?: string;
   colorClass?: string;
   sizeClass?: string;
 }) {
@@ -64,7 +62,6 @@ export function MarqueeArtists() {
         <MarqueeTrack
           items={artists}
           direction="left"
-          speed="70s"
           colorClass="text-white"
           sizeClass="text-xl md:text-3xl"
         />
@@ -73,7 +70,6 @@ export function MarqueeArtists() {
         <MarqueeTrack
           items={clients}
           direction="right"
-          speed="50s"
           colorClass="text-white/50"
           sizeClass="text-lg md:text-2xl"
         />

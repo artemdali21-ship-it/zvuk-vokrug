@@ -61,7 +61,6 @@ export function GallerySection() {
   const loop2 = [...photos].reverse().concat([...photos].reverse());
 
   const CARD_GAP = 16; // px — gap-4
-  const CARD_W = 280;  // clamp midpoint
 
   return (
     <section
