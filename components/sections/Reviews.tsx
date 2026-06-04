@@ -2,87 +2,197 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { GlowCard } from "@/components/ui/GlowCard";
-import { reviews } from "@/data/reviews";
+import Image from "next/image";
+import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
+import { RadialGlowOrb } from "@/components/ui/RadialGlowOrb";
+
+const reviews = [
+  {
+    author: "Звукорежиссёр Григория Лепса",
+    role: "Григорий Лепс",
+    photo: "/artists/leps-v2.jpg",
+    photoPos: "center 15%",
+    text: "Работали с «Звук Вокруг» на площадке в Волгограде — всё чётко, без сюрпризов. Оборудование в отличном состоянии, райдер выполнен полностью.",
+  },
+  {
+    author: "Звукорежиссёр Машины Времени",
+    role: "Машина Времени",
+    photo: "/artists/mashina-v2.jpg",
+    photoPos: "center 15%",
+    text: "Волгоград, «Звук Вокруг» — однозначно рекомендую. На саундчеке не было ни одной проблемы. Такой уровень сервиса встречается редко в регионах.",
+  },
+  {
+    author: "ЛЮБЭ",
+    role: "Артист",
+    photo: "/artists/lyube-v2.jpg",
+    photoPos: "center 15%",
+    text: "«Звук Вокруг» не подвели: звук был мощным и чистым, даже на большой открытой площадке. Спасибо команде за уважение к нашей музыке.",
+  },
+  {
+    author: "АНТОХА МС",
+    role: "Артист",
+    photo: "/artists/antokha-v2.jpg",
+    photoPos: "center 15%",
+    text: "Ребята из «Звук Вокруг» сделали всё, чтобы концерт прошёл на высшем уровне. Никакой суеты, никаких косяков — просто хорошая работа.",
+  },
+  {
+    author: "Виктор Гепфнер",
+    role: "Заслуженный артист России",
+    photo: "/artists/gepfner.jpg",
+    photoPos: "center 15%",
+    text: "На протяжении многих лет компания стабильно обеспечивает техническое сопровождение городских мероприятий. Качество не падает, команда всегда готова.",
+  },
+  {
+    author: "НЭТ",
+    role: "Волгоградский Новый Экспериментальный Театр",
+    photo: "/artists/net-v2.jpg",
+    photoPos: "center",
+    text: "Сотрудничество с «Звук Вокруг» — это надёжная техническая база для наших постановок. Они понимают специфику театрального звука.",
+  },
+  {
+    author: "АКИ",
+    role: "Агентство культурных инициатив",
+    photo: "/artists/aki2.jpg",
+    photoPos: "center",
+    text: "«Звук Вокруг» взяли на себя полное техническое обеспечение Парада Победы и справились безупречно. Благодарим за профессионализм.",
+  },
+];
 
 export function Reviews() {
   const headRef = useRef<HTMLDivElement>(null);
   const headInView = useInView(headRef, { once: true, margin: "-60px" });
-  const gridRef = useRef<HTMLDivElement>(null);
-  const gridInView = useInView(gridRef, { once: true, margin: "-60px" });
-
-  // 3-column masonry split
-  const col1 = reviews.filter((_, i) => i % 3 === 0);
-  const col2 = reviews.filter((_, i) => i % 3 === 1);
-  const col3 = reviews.filter((_, i) => i % 3 === 2);
-
-  const ReviewCard = ({ r, delay }: { r: typeof reviews[0]; delay: number }) => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={gridInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <GlowCard>
-        {/* Decorative quote mark */}
-        <span className="block text-klein/20 leading-none mb-3 select-none" style={{ fontSize: "3.5rem", fontFamily: "Georgia, serif", lineHeight: 1 }}>
-          &ldquo;
-        </span>
-        {/* Quote text — no wrapping quotes, clean read */}
-        <blockquote className="text-ink/80 text-sm leading-relaxed mb-6">
-          {r.text}
-        </blockquote>
-        {/* Author */}
-        <div className="flex items-center gap-3 pt-4 border-t border-ink/[0.08]">
-          <div className="w-9 h-9 rounded-full bg-klein/10 border border-klein/20 flex items-center justify-center shrink-0">
-            <span className="text-klein text-[9px] font-bold tracking-wide leading-none">
-              {r.initials}
-            </span>
-          </div>
-          <div>
-            <p className="text-ink text-sm font-semibold leading-tight">{r.role}</p>
-            <p className="text-ink2 text-xs mt-0.5 leading-snug">{r.author}</p>
-          </div>
-        </div>
-      </GlowCard>
-    </motion.div>
-  );
 
   return (
-    <section className="bg-paper2 py-20 md:py-28 border-t border-ink/[0.07]">
-      <div className="container-page">
+    <section
+      className="relative overflow-hidden section-py"
+      style={{ background: "#020617" }}
+    >
+      <NoiseOverlay />
+
+      {/* Blue glow — left atmospheric accent */}
+      <div className="absolute left-[-15vw] top-1/2 -translate-y-1/2 pointer-events-none z-0" aria-hidden>
+        <RadialGlowOrb size="50vw" />
+      </div>
+
+      <div className="relative z-10">
+        {/* Header */}
         <motion.div
           ref={headRef}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 32 }}
           animate={headInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-12 md:mb-16"
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="container-page mb-12 md:mb-16"
         >
-          <p className="eyebrow text-ink2 mb-5">Говорят клиенты</p>
-          <h2 className="display text-mega text-klein uppercase">
-            ОТЗЫВЫ
+          <p className="eyebrow text-white/35 mb-5">ОТЗЫВЫ</p>
+          <h2
+            className="font-display font-black text-white"
+            style={{ fontSize: "clamp(40px, 6vw, 88px)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
+          >
+            Говорят те, кто работал с нами.
           </h2>
         </motion.div>
 
-        {/* Desktop: 3-column masonry */}
-        <div ref={gridRef} className="hidden md:grid grid-cols-3 gap-4 items-start">
-          <div className="flex flex-col gap-4">
-            {col1.map((r, i) => <ReviewCard key={i} r={r} delay={i * 3 * 0.07} />)}
-          </div>
-          <div className="flex flex-col gap-4">
-            {col2.map((r, i) => <ReviewCard key={i} r={r} delay={(i * 3 + 1) * 0.07} />)}
-          </div>
-          <div className="flex flex-col gap-4">
-            {col3.map((r, i) => <ReviewCard key={i} r={r} delay={(i * 3 + 2) * 0.07} />)}
-          </div>
-        </div>
-
-        {/* Mobile: single column */}
-        <div className="md:hidden flex flex-col gap-4">
-          {reviews.map((r, i) => (
-            <ReviewCard key={i} r={r} delay={i * 0.05} />
+        {/* Horizontal scroll carousel */}
+        <div
+          className="flex gap-4 overflow-x-auto scrollbar-none px-[clamp(20px,5vw,80px)]"
+          style={{ paddingBottom: 8 }}
+        >
+          {reviews.map((review, i) => (
+            <ReviewCard key={i} review={review} index={i} />
           ))}
+          {/* trailing spacer */}
+          <div className="shrink-0 w-[clamp(20px,5vw,80px)]" />
         </div>
       </div>
     </section>
+  );
+}
+
+function ReviewCard({
+  review,
+  index,
+}: {
+  review: { author: string; role: string; photo: string; photoPos: string; text: string };
+  index: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 28 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+      className="shrink-0 flex flex-col overflow-hidden rounded-2xl"
+      style={{
+        width: 248,
+        aspectRatio: "9 / 16",
+        background: "#07091a",
+      }}
+    >
+      {/* Photo — top 54% */}
+      <div className="relative shrink-0" style={{ height: "54%" }}>
+        <Image
+          src={review.photo}
+          fill
+          alt={review.author}
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          style={{ objectPosition: review.photoPos }}
+          sizes="248px"
+        />
+        {/* Gradient to dark panel */}
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(to bottom, rgba(2,6,23,0.05) 30%, #07091a 100%)" }}
+        />
+      </div>
+
+      {/* Bottom panel */}
+      <div
+        className="flex flex-col justify-between"
+        style={{ height: "46%", padding: "12px 16px 16px" }}
+      >
+        {/* Quote mark */}
+        <span
+          style={{
+            display: "block",
+            fontFamily: "Georgia, serif",
+            fontSize: 28,
+            lineHeight: 1,
+            color: "#2155FF",
+            marginBottom: 8,
+          }}
+        >
+          &ldquo;
+        </span>
+
+        {/* Quote text */}
+        <p
+          style={{
+            fontSize: 11.5,
+            lineHeight: 1.55,
+            color: "rgba(237,240,255,0.82)",
+            flex: 1,
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitLineClamp: 5,
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {review.text}
+        </p>
+
+        {/* Divider + name/role */}
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", marginTop: 10, paddingTop: 10 }}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: "#ffffff", marginBottom: 2, lineHeight: 1.2 }}>
+            {review.author}
+          </p>
+          <p style={{ fontSize: 10, letterSpacing: "0.06em", color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>
+            {review.role}
+          </p>
+        </div>
+      </div>
+    </motion.div>
   );
 }

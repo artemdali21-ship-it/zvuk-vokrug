@@ -1,45 +1,41 @@
 "use client";
 
-import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
 import { artists } from "@/data/artists";
 import { clients } from "@/data/clients";
 
 function MarqueeTrack({
   items,
   direction = "left",
-  speed = "40s",
-  textClass = "text-2xl md:text-4xl",
-  colorClass = "text-klein",
+  speed = "70s",
+  colorClass = "text-white",
+  sizeClass = "text-2xl md:text-4xl",
 }: {
   items: string[];
   direction?: "left" | "right";
   speed?: string;
-  textClass?: string;
   colorClass?: string;
+  sizeClass?: string;
 }) {
   const prefersReducedMotion = useReducedMotion();
-  // Double for seamless loop
   const doubled = [...items, ...items];
-  const animStyle = prefersReducedMotion
-    ? {}
-    : {
-        animationDuration: speed,
-        animationTimingFunction: "linear",
-        animationIterationCount: "infinite",
-        animationName: direction === "left" ? "marquee" : "marquee-reverse",
-      };
+  const cls = prefersReducedMotion
+    ? ""
+    : direction === "left"
+    ? "animate-marquee"
+    : "animate-marquee-reverse";
 
   return (
-    <div className="overflow-hidden py-2 select-none" aria-hidden>
-      <div className="flex whitespace-nowrap w-max" style={animStyle}>
+    <div className="overflow-hidden py-1 select-none" aria-hidden>
+      <div className={`flex whitespace-nowrap w-max ${cls}`}>
         {doubled.map((item, i) => (
           <span
             key={i}
-            className={`display ${textClass} ${colorClass} shrink-0 mx-3 md:mx-5`}
+            className={`font-display font-black ${sizeClass} ${colorClass} shrink-0 mx-4 md:mx-6`}
           >
             {item}
-            <span className="mx-3 md:mx-5 text-ink/20">·</span>
+            <span className="mx-4 md:mx-6 opacity-20">·</span>
           </span>
         ))}
       </div>
@@ -57,25 +53,29 @@ export function MarqueeArtists() {
       initial={{ opacity: 0 }}
       animate={inView ? { opacity: 1 } : {}}
       transition={{ duration: 0.8 }}
-      className="bg-paper py-16 md:py-20 overflow-hidden border-y border-ink/[0.07]"
+      className="relative overflow-hidden py-20 md:py-28"
+      style={{
+        background: "#020617",
+        borderTop: "1px solid rgba(255,255,255,0.07)",
+        borderBottom: "1px solid rgba(255,255,255,0.07)",
+      }}
     >
-      <div className="mb-1 marquee-fade">
+      <div className="marquee-fade mb-3">
         <MarqueeTrack
           items={artists}
           direction="left"
           speed="70s"
-          textClass="text-xl md:text-3xl"
-          colorClass="text-klein"
+          colorClass="text-white"
+          sizeClass="text-xl md:text-3xl"
         />
       </div>
-
-      <div className="mt-4 marquee-fade">
+      <div className="marquee-fade">
         <MarqueeTrack
           items={clients}
           direction="right"
           speed="50s"
-          textClass="text-lg md:text-2xl"
-          colorClass="text-ink2"
+          colorClass="text-white/50"
+          sizeClass="text-lg md:text-2xl"
         />
       </div>
     </motion.section>

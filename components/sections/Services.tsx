@@ -2,83 +2,91 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Volume2, Lightbulb, LayoutGrid, Monitor, Sparkles } from "lucide-react";
-import { services } from "@/data/services";
+import Image from "next/image";
+import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
 
-const iconMap = {
-  Volume2,
-  Lightbulb,
-  LayoutGrid,
-  Monitor,
-  Sparkles,
-} as const;
-
-function ServiceRow({
-  service,
-  index,
-}: {
-  service: (typeof services)[0];
-  index: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  const Icon = iconMap[service.icon as keyof typeof iconMap];
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 16 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
-      className="group grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-8 py-6 md:py-8 border-t border-ink/10 cursor-default"
-    >
-      {/* Left: icon + title */}
-      <div className="flex items-baseline gap-4">
-        <Icon className="w-4 h-4 text-ink2 group-hover:text-klein transition-colors duration-300 shrink-0 mt-1 self-start translate-y-[2px]" />
-        <h3 className="display text-huge text-ink group-hover:text-klein transition-colors duration-300 relative">
-          {service.title}
-          <span className="absolute bottom-0 left-0 h-[2px] bg-klein w-0 group-hover:w-full transition-all duration-400 origin-left" />
-        </h3>
-      </div>
-
-      {/* Right: description */}
-      <p className="text-ink2 text-sm md:text-base leading-relaxed md:self-center md:pt-0 pl-8 md:pl-0">
-        {service.description}
-      </p>
-    </motion.div>
-  );
-}
+const values = [
+  { n: "01", title: "Райдер выполняется без сюрпризов" },
+  { n: "02", title: "Оборудование приезжает в рабочем состоянии" },
+  { n: "03", title: "Саундчек проходит без суеты" },
+  { n: "04", title: "Команда понимает специфику открытых площадок" },
+  { n: "05", title: "Техническое обеспечение не отвлекает артистов" },
+  { n: "06", title: "Без переплат" },
+  { n: "07", title: "Дисциплина и субординация на важных городских событиях" },
+  { n: "08", title: "Демонтаж проходит вовремя и чисто" },
+];
 
 export function Services() {
   const headRef = useRef<HTMLDivElement>(null);
   const headInView = useInView(headRef, { once: true, margin: "-60px" });
+  const gridRef = useRef<HTMLDivElement>(null);
+  const gridInView = useInView(gridRef, { once: true, margin: "-60px" });
 
   return (
-    <section className="bg-paper py-20 md:py-28">
-      <div className="container-page">
+    <section className="relative overflow-hidden section-py-large" style={{ background: "#030817" }}>
+      {/* bg-angular fon */}
+      <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden>
+        <Image src="/bg/bg-angular.png" fill alt="" style={{ objectFit: "cover", opacity: 0.45 }} sizes="100vw" />
+      </div>
+      <NoiseOverlay />
+
+      <div className="container-page relative z-10">
+        {/* Header */}
         <motion.div
           ref={headRef}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 32 }}
           animate={headInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-4 md:mb-6"
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-20 md:mb-28"
         >
-          <p className="eyebrow text-ink2 mb-4">
-            Профессиональное оборудование с монтажом
-          </p>
-          <h2 className="display text-huge text-ink mb-4">
-            Звук. Свет. Сцена. Экраны.
+          <p className="eyebrow text-white/35 mb-5">Что ценит заказчик</p>
+          <h2
+            className="font-display font-black text-white"
+            style={{ fontSize: "clamp(48px, 7vw, 104px)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
+          >
+            ЧТО ЦЕНИТ<br />ЗАКАЗЧИК
           </h2>
-          <p className="text-ink2 text-lg max-w-2xl">
-            Мы создаём технические решения для событий любого масштаба — от камерных концертов до городских праздников с десятками тысяч зрителей.
-          </p>
         </motion.div>
 
-        <div>
-          {services.map((s, i) => (
-            <ServiceRow key={s.title} service={s} index={i} />
+        {/* Grid 2×4 */}
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2">
+          {values.map((v, i) => (
+            <motion.div
+              key={v.n}
+              initial={{ opacity: 0, y: 16 }}
+              animate={gridInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.65, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+              className={`flex gap-6 py-7 md:py-10 group ${i % 2 === 0 ? "col-border-right" : "col-indent-left"}`}
+              style={{
+                borderTop: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              <span
+                className="font-display font-black shrink-0 tabular-nums"
+                style={{ fontSize: "clamp(48px, 5vw, 72px)", lineHeight: 0.9, color: "#2155FF" }}
+              >
+                {v.n}
+              </span>
+              <h3
+                className="font-display font-black text-white group-hover:text-blue-electric transition-colors duration-300 self-center"
+                style={{ fontSize: "clamp(20px, 2.5vw, 32px)", lineHeight: 1.1, letterSpacing: "-0.03em" }}
+              >
+                {v.title}
+              </h3>
+            </motion.div>
           ))}
         </div>
+
+        {/* Connector phrase */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={gridInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="text-center text-white/40 text-base md:text-lg max-w-3xl mx-auto mt-20 md:mt-28"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 48 }}
+        >
+          Мы создаём технические решения для событий любого масштаба — от камерных концертов до городских праздников с десятками тысяч зрителей
+        </motion.p>
       </div>
     </section>
   );

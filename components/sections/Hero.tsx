@@ -1,102 +1,183 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import dynamic from "next/dynamic";
-
-const WaveBackground = dynamic(() => import("@/components/ui/WaveBackground"), {
-  ssr: false,
-});
-
-const ease = [0.22, 1, 0.36, 1] as const;
-const fade = (delay: number) => ({
-  initial: { opacity: 0, y: 28 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.75, delay, ease },
-});
+import { useRef } from "react";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import Image from "next/image";
+import { RadialGlowOrb } from "@/components/ui/RadialGlowOrb";
+import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
+import { ParallaxObject } from "@/components/ui/ParallaxObject";
+import WaveBackground from "@/components/ui/WaveBackground";
 
 export function Hero() {
+  const ref = useRef<HTMLElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  const zvukY   = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "-35%"]);
+  const vokrugY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "25%"]);
+  const orbY    = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "-15%"]);
+  const orbScale = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? [1, 1] : [1, 1.08]);
+
   return (
-    <section className="relative bg-paper min-h-[100dvh] flex flex-col justify-center overflow-hidden pt-20">
+    <section
+      ref={ref}
+      className="relative min-h-[100dvh] overflow-hidden"
+      style={{
+        background: `linear-gradient(180deg, #020617 0%, #071133 100%)`,
+      }}
+    >
+      {/* SEO h1 — screen reader only */}
+      <h1 className="sr-only">
+        Звук Вокруг — аренда звука, света, сцены и LED-экранов. Волгоград, Юг России. С 1994 года.
+      </h1>
 
-      {/* Wave shader — без оверлея, 1 в 1 */}
-      <WaveBackground darkTheme={false} resolutionScale={1.0} />
-
-      {/* Klein blue left accent bar */}
-      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-klein z-[1]" aria-hidden />
-
-      <div className="container-page py-16 md:py-24 relative z-[1]">
-        {/* Eyebrow */}
-        <motion.p {...fade(0.1)} className="eyebrow text-ink2 mb-8 md:mb-10">
-          ЗВУК ВОКРУГ · с 1994 года · Волгоград
-        </motion.p>
-
-        {/* Main headline */}
-        <motion.h1
-          {...fade(0.2)}
-          className="display text-ink leading-[0.92] mb-6 md:mb-8"
-          style={{ fontSize: "clamp(3.5rem, 10vw, 9rem)", letterSpacing: "-0.03em" }}
-        >
-          ЗВУК<br />
-          СВЕТ<br />
-          СЦЕНА<br />
-          <span className="text-klein">ЭКРАНЫ</span>
-        </motion.h1>
-
-        {/* Descriptor */}
-        <motion.p {...fade(0.35)} className="text-ink2 text-base md:text-lg max-w-lg mb-10 md:mb-12 leading-relaxed">
-          Комплексное техническое обеспечение мероприятий.
-        </motion.p>
-
-        {/* Cities */}
-        <motion.p
-          {...fade(0.45)}
-          className="display text-ink uppercase tracking-[0.06em] mb-6 md:mb-8"
-          style={{ fontSize: "clamp(1.1rem, 3vw, 2rem)" }}
-        >
-          Волгоград · Элиста · Астрахань · Саратов
-        </motion.p>
-
-        {/* Stats */}
-        <motion.p {...fade(0.55)} className="text-ink/60 text-sm mb-12 md:mb-16 tabular-nums">
-          30 лет опыта · 9 000+ мероприятий
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div {...fade(0.65)} className="flex flex-col sm:flex-row gap-3">
-          <a
-            href="tel:+79033710400"
-            className="inline-flex items-center justify-center px-7 py-3.5 bg-klein text-paper text-sm font-medium uppercase tracking-[0.1em] hover:bg-klein-deep transition-colors"
-          >
-            Получить смету
-          </a>
-          <Link
-            href="/projects"
-            className="inline-flex items-center justify-center px-7 py-3.5 border border-ink/20 text-ink text-sm font-medium uppercase tracking-[0.1em] hover:border-ink/50 transition-colors"
-          >
-            Проекты
-          </Link>
-        </motion.div>
+      {/* Wave Background — OGL full screen, dark blue waves */}
+      <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden>
+        <WaveBackground darkTheme resolutionScale={0.6} />
       </div>
 
-      {/* Bottom ticker */}
+      {/* bg-room overlay — поверх волны, создаёт глубину */}
+      <div className="absolute inset-0 z-[1] pointer-events-none" aria-hidden>
+        <Image
+          src="/bg/bg-room-corner.png"
+          fill
+          alt=""
+          style={{ objectFit: "cover", objectPosition: "center", opacity: 0.25 }}
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(2,6,23,0.2) 0%, rgba(2,6,23,0.05) 50%, rgba(2,6,23,0.8) 100%)" }} />
+      </div>
+
+      <NoiseOverlay />
+
+      {/* Galaxy — right accent */}
+      <ParallaxObject
+        src="/3d/obj-galaxy.png"
+        width="clamp(420px, 65vw, 820px)"
+        top="0%"
+        right="-18vw"
+        parallax={0.3}
+        opacity={0.22}
+        zIndex={5}
+        float
+        sizes="1100px"
+      />
+
+      {/* ── z-10: ЗВУК — за orb ── */}
+      <motion.div
+        style={{ y: zvukY }}
+        className="absolute inset-0 z-10 flex items-start justify-start pointer-events-none will-change-transform"
+      >
+        <motion.span
+          initial={{ y: 48, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          aria-hidden
+          className="font-display font-black text-white select-none"
+          style={{
+            fontSize: "clamp(88px, 18vw, 260px)",
+            lineHeight: 0.86,
+            letterSpacing: "-0.065em",
+            paddingTop: "clamp(120px, 18vh, 200px)",
+            paddingLeft: "clamp(20px, 5vw, 80px)",
+          }}
+        >
+          ЗВУК
+        </motion.span>
+      </motion.div>
+
+      {/* ── z-20: Orb ── */}
+      <motion.div
+        style={{ y: orbY, scale: orbScale }}
+        className="absolute inset-0 z-20 flex items-center justify-center will-change-transform"
+      >
+        <RadialGlowOrb size="32vw" />
+      </motion.div>
+
+      {/* ── z-30: ВОКРУГ — перед orb ── */}
+      <motion.div
+        style={{ y: vokrugY }}
+        className="absolute inset-0 z-30 flex items-end justify-end pointer-events-none will-change-transform"
+      >
+        <motion.span
+          initial={{ y: 48, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          aria-hidden
+          className="font-display font-black text-white select-none"
+          style={{
+            fontSize: "clamp(88px, 18vw, 260px)",
+            lineHeight: 0.86,
+            letterSpacing: "-0.065em",
+            paddingBottom: "clamp(220px, 28vh, 320px)",
+            paddingRight: "clamp(20px, 5vw, 80px)",
+          }}
+        >
+          ВОКРУГ
+        </motion.span>
+      </motion.div>
+
+      {/* ── z-40: Контент-блок снизу ── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 0.9 }}
-        className="mt-auto border-t border-ink/[0.08] relative z-[1]"
+        transition={{ duration: 0.8, delay: 0.5 }}
+        className="absolute bottom-0 left-0 right-0 z-40"
+        style={{ paddingBottom: "max(clamp(48px, 7vh, 80px), env(safe-area-inset-bottom, 0px))", paddingLeft: "clamp(20px, 5vw, 80px)", paddingRight: "clamp(20px, 5vw, 80px)" }}
       >
-        <div className="container-page py-4 flex items-center gap-6 md:gap-10 overflow-x-auto scrollbar-none">
-          {[
-            "Scorpions · Лепс · ЛЮБЭ",
-            "Газпром · Министерство культуры",
-            "Парад Победы · 9 Мая",
-            "ParkSeason Festival",
-          ].map((item, i) => (
-            <span key={i} className="eyebrow text-ink2 whitespace-nowrap shrink-0">
-              {item}
-            </span>
-          ))}
+        {/* Service line */}
+        <p
+          className="font-display font-black text-white mb-3"
+          style={{
+            fontSize: "clamp(20px, 3.5vw, 52px)",
+            lineHeight: 0.92,
+            letterSpacing: "-0.055em",
+          }}
+        >
+          ЗВУК&nbsp;&nbsp;СВЕТ&nbsp;&nbsp;СЦЕНА&nbsp;&nbsp;ЭКРАНЫ
+        </p>
+
+        {/* Body */}
+        <p className="text-white/60 text-base md:text-lg mb-8 mt-4 max-w-xl">
+          комплексное техническое обеспечение мероприятий
+        </p>
+
+        {/* CTA */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 mb-10">
+          <a
+            href="mailto:fmpuzikov@gmail.com?subject=Запрос%20предложения"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-full font-bold text-sm tracking-wide uppercase text-white transition-colors duration-200"
+            style={{ background: "#2155FF" }}
+            onMouseEnter={e => (e.currentTarget.style.background = "#346BFF")}
+            onMouseLeave={e => (e.currentTarget.style.background = "#2155FF")}
+          >
+            Получить предложение
+          </a>
+          <a
+            href="tel:+79033710400"
+            className="text-white/60 text-sm hover:text-white transition-colors duration-200 underline-offset-4 hover:underline"
+          >
+            позвонить Фёдору
+          </a>
+        </div>
+
+        {/* Geo */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-10 pt-2">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-white/35">
+            Волгоград · Элиста · Астрахань · Саратов
+          </p>
+          <div className="flex gap-5 overflow-x-auto scrollbar-none">
+            {["Scorpions · Лепс · ЛЮБЭ", "Газпром · Министерство культуры", "Парад Победы · 9 Мая", "ParkSeason Festival"].map((item, i) => (
+              <span key={i} className="text-[11px] font-bold tracking-[0.1em] uppercase text-white/20 whitespace-nowrap shrink-0">
+                {item}
+              </span>
+            ))}
+          </div>
         </div>
       </motion.div>
     </section>

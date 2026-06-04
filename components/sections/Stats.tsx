@@ -2,79 +2,66 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-
-const dominant = { value: "30", label: "ЛЕТ", sub: "с 1994 года" };
-
-const secondary = [
-  { value: "9 000", suffix: "+", label: "МЕРОПРИЯТИЙ", sub: "за 30 лет" },
-  { value: "60", suffix: "+", label: "ФЕДЕРАЛЬНЫХ АРТИСТОВ", sub: "опыт технического сопровождения", klein: true },
-];
-
-function SecondaryItem({
-  stat,
-  index,
-  inView,
-}: {
-  stat: (typeof secondary)[0];
-  index: number;
-  inView: boolean;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay: 0.15 + index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-      className="py-8 border-t border-ink/10 first:border-t-0 md:first:border-t"
-    >
-      <div className="display text-mega text-ink leading-none mb-2 tabular-nums">
-        {stat.value}
-        {stat.klein ? (
-          <span className="text-klein">{stat.suffix}</span>
-        ) : (
-          <span>{stat.suffix}</span>
-        )}
-      </div>
-      <p className="text-xs md:text-sm text-ink uppercase tracking-[0.12em] font-semibold mb-1">
-        {stat.label}
-      </p>
-      <p className="text-xs text-ink2 leading-snug max-w-[200px]">
-        {stat.sub}
-      </p>
-    </motion.div>
-  );
-}
+import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
 
 export function Stats() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section className="bg-paper2">
-      <div className="container-page">
-        <div ref={ref} className="grid grid-cols-1 md:grid-cols-12">
-          {/* Left: dominant number */}
+    <section className="relative overflow-hidden section-py" style={{ background: "#030817", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+      <NoiseOverlay />
+
+      <div className="container-page relative z-10">
+        <div ref={ref} className="grid grid-cols-1 md:grid-cols-2">
+
+          {/* 30 лет */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="md:col-span-5 flex flex-col justify-center py-14 md:py-20 pr-0 md:pr-12 border-b md:border-b-0 md:border-r border-ink/[0.08]"
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            // col-border-right: shows divider on md+, hidden on mobile 1-col
+            className="flex flex-col justify-center py-10 md:py-0 col-border-right"
           >
-            <div className="display leading-none tabular-nums mb-3"
-              style={{ fontSize: "clamp(5rem, 14vw, 12rem)", letterSpacing: "-0.04em", color: "#0A0A0A" }}>
-              {dominant.value}
+            <div
+              className="font-display font-black text-white tabular-nums leading-none select-none"
+              style={{ fontSize: "clamp(52px, 10vw, 160px)", letterSpacing: "-0.06em", lineHeight: 0.8 }}
+            >
+              30
             </div>
-            <p className="display text-[clamp(1.5rem,3vw,2.5rem)] text-ink uppercase tracking-[0.12em] mb-2">
-              {dominant.label}
+            <p
+              className="font-display font-black uppercase text-white mt-4"
+              style={{ fontSize: "clamp(12px, 1.4vw, 20px)", letterSpacing: "0.06em" }}
+            >
+              ЛЕТ ОПЫТА
             </p>
-            <p className="text-sm text-ink2">{dominant.sub}</p>
+            <p className="text-white/40 text-xs mt-2 tracking-wider">с 1994 года</p>
           </motion.div>
 
-          {/* Right: three secondary stats */}
-          <div className="md:col-span-7 flex flex-col justify-center py-6 md:py-0 md:pl-12 divide-y divide-ink/10 md:divide-y-0">
-            {secondary.map((s, i) => (
-              <SecondaryItem key={s.label} stat={s} index={i} inView={inView} />
-            ))}
-          </div>
+          {/* 9000+ */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+            // col-indent-left: adds left padding on md+, 0 on mobile
+            className="flex flex-col justify-center pt-10 md:pt-0 col-indent-left"
+            style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+          >
+            <div
+              className="font-display font-black text-white tabular-nums leading-none select-none"
+              style={{ fontSize: "clamp(52px, 10vw, 160px)", letterSpacing: "-0.06em", lineHeight: 0.8 }}
+            >
+              9000<span style={{ color: "#2155FF" }}>+</span>
+            </div>
+            <p
+              className="font-display font-black uppercase text-white mt-4"
+              style={{ fontSize: "clamp(12px, 1.4vw, 20px)", letterSpacing: "0.06em" }}
+            >
+              УСПЕШНЫХ МЕРОПРИЯТИЙ
+            </p>
+            <p className="text-white/40 text-xs mt-2 tracking-wider">за 30 лет</p>
+          </motion.div>
+
         </div>
       </div>
     </section>

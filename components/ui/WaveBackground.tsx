@@ -103,6 +103,10 @@ export default function WaveBackground({
       const h = parent.clientHeight;
       renderer.setSize(w * resolutionScale, h * resolutionScale);
       program.uniforms.uResolution.value.set(w, h);
+      // Force canvas to always fill parent — OGL overrides CSS size with px values
+      const c = renderer.gl.canvas as HTMLCanvasElement;
+      c.style.width = "100%";
+      c.style.height = "100%";
     };
 
     window.addEventListener("resize", resize);

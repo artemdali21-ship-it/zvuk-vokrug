@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Inter_Tight } from "next/font/google";
 import "./globals.css";
 
@@ -44,6 +44,12 @@ export const metadata: Metadata = {
   },
 };
 
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
 export default function RootLayout({
   children,
 }: Readonly<{

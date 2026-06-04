@@ -15,7 +15,6 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -23,106 +22,77 @@ export function Header() {
 
   return (
     <>
-      {/* Klein blue 2px top accent line */}
-      <div className="fixed top-0 left-0 right-0 z-[60] h-[2px] bg-klein" />
+      {/* Electric blue top line */}
+      <div className="fixed top-0 left-0 right-0 z-[60] h-[2px]" style={{ background: "#2155FF" }} />
 
       <motion.header
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed top-[2px] left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-paper/96 backdrop-blur-sm border-b border-ink/[0.07]"
-            : "bg-paper border-b border-ink/[0.07]"
-        }`}
+        className="fixed top-[2px] left-0 right-0 z-50 transition-all duration-300"
+        style={{
+          background: scrolled ? "rgba(2,6,23,0.92)" : "rgba(2,6,23,0.72)",
+          backdropFilter: "blur(20px)",
+          borderBottom: "1px solid rgba(255,255,255,0.07)",
+        }}
       >
-        <div className="container-page flex items-center justify-between h-20 md:h-[80px]">
+        <div className="container-page flex items-center justify-between h-[72px] md:h-[88px]">
 
-          {/* ─── Logo ─── */}
-          <Link
-            href="/"
-            className="shrink-0 hover:opacity-80 transition-opacity duration-200"
-            aria-label="Звук Вокруг — на главную"
-          >
+          {/* Logo */}
+          <Link href="/" className="shrink-0 hover:opacity-80 transition-opacity duration-200" aria-label="Звук Вокруг — на главную">
             <Image
               src="/logo.png"
               alt="Звук Вокруг"
               width={280}
               height={200}
-              className="h-[60px] w-auto object-contain"
+              className="h-[52px] w-auto object-contain brightness-0 invert"
               priority
             />
           </Link>
 
-          {/* ─── Desktop nav ─── */}
-          <nav
-            className="hidden md:flex items-center gap-8"
-            aria-label="Основная навигация"
-          >
-            {/* Status indicator */}
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-8" aria-label="Основная навигация">
             <div className="flex items-center gap-2" aria-hidden>
               <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-klein opacity-60" />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-klein" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: "#2155FF" }} />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: "#2155FF" }} />
               </span>
-              <span className="text-[10px] text-ink2 uppercase tracking-[0.16em] tabular-nums">
-                Волгоград
-              </span>
+              <span className="text-[10px] text-white/40 uppercase tracking-[0.16em]">Волгоград</span>
             </div>
-
-            <Link
-              href="/projects"
-              className="text-[11px] text-ink2 uppercase tracking-[0.14em] hover:text-ink transition-colors duration-200"
-            >
+            <Link href="/projects" className="text-[11px] text-white/50 uppercase tracking-[0.14em] hover:text-white transition-colors duration-200">
               Проекты
             </Link>
-
-            <a
-              href="tel:+79033710400"
-              className="text-sm text-ink2 hover:text-ink transition-colors duration-200 tabular-nums"
-            >
+            <a href="tel:+79033710400" className="text-sm text-white/50 hover:text-white transition-colors duration-200 tabular-nums">
               +7 (903) 371-04-00
             </a>
           </nav>
 
-          {/* ─── CTA button (desktop) + Burger (mobile) ─── */}
+          {/* CTA + Burger */}
           <div className="flex items-center gap-3">
             <a
               href="tel:+79033710400"
-              className="hidden md:inline-flex items-center gap-2 px-4 py-2 bg-klein text-paper text-[11px] uppercase tracking-[0.12em] font-medium hover:bg-klein-deep transition-colors duration-200"
+              className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-[11px] uppercase tracking-[0.12em] font-bold transition-colors duration-200"
+              style={{ background: "#2155FF", height: 44 }}
+              onMouseEnter={e => (e.currentTarget.style.background = "#346BFF")}
+              onMouseLeave={e => (e.currentTarget.style.background = "#2155FF")}
             >
-              {/* Corner decorations */}
-              <span aria-hidden className="text-paper/40 text-[9px] font-mono leading-none">+</span>
               Связаться
             </a>
 
-            {/* Mobile burger */}
             <button
-              onClick={() => setMenuOpen((v) => !v)}
-              className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-[5px] group"
+              onClick={() => setMenuOpen(v => !v)}
+              className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-[5px]"
               aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"}
               aria-expanded={menuOpen}
             >
-              <span
-                className={`block w-5 h-[1.5px] bg-ink transition-all duration-300 origin-center ${
-                  menuOpen ? "translate-y-[6.5px] rotate-45" : ""
-                }`}
-              />
-              <span
-                className={`block w-5 h-[1.5px] bg-ink transition-all duration-300 ${
-                  menuOpen ? "opacity-0 scale-x-0" : ""
-                }`}
-              />
-              <span
-                className={`block w-5 h-[1.5px] bg-ink transition-all duration-300 origin-center ${
-                  menuOpen ? "-translate-y-[6.5px] -rotate-45" : ""
-                }`}
-              />
+              <span className={`block w-5 h-[1.5px] bg-white transition-all duration-300 origin-center ${menuOpen ? "translate-y-[6.5px] rotate-45" : ""}`} />
+              <span className={`block w-5 h-[1.5px] bg-white transition-all duration-300 ${menuOpen ? "opacity-0 scale-x-0" : ""}`} />
+              <span className={`block w-5 h-[1.5px] bg-white transition-all duration-300 origin-center ${menuOpen ? "-translate-y-[6.5px] -rotate-45" : ""}`} />
             </button>
           </div>
         </div>
 
-        {/* ─── Mobile menu ─── */}
+        {/* Mobile menu */}
         <AnimatePresence>
           {menuOpen && (
             <motion.div
@@ -130,46 +100,25 @@ export function Header() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              className="md:hidden overflow-hidden border-t border-ink/[0.07] bg-paper"
+              className="md:hidden overflow-hidden"
+              style={{ borderTop: "1px solid rgba(255,255,255,0.07)", background: "rgba(2,6,23,0.96)" }}
             >
               <nav className="container-page py-6 flex flex-col gap-5">
-                {/* Status */}
-                <div className="flex items-center gap-2">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-klein opacity-60" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-klein" />
-                  </span>
-                  <span className="text-[10px] text-ink2 uppercase tracking-[0.16em]">
-                    Волгоград
-                  </span>
-                </div>
-
-                <Link
-                  href="/projects"
-                  onClick={() => setMenuOpen(false)}
-                  className="text-sm text-ink2 uppercase tracking-[0.12em] hover:text-ink transition-colors"
-                >
+                <Link href="/projects" onClick={() => setMenuOpen(false)} className="text-sm text-white/60 uppercase tracking-[0.12em] hover:text-white transition-colors">
                   Проекты
                 </Link>
-
-                <div className="border-t border-ink/[0.06] pt-5 flex flex-col gap-3">
-                  <a
-                    href="tel:+79033710400"
-                    className="text-xl font-medium text-ink tabular-nums"
-                  >
+                <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }} className="pt-5 flex flex-col gap-3">
+                  <a href="tel:+79033710400" className="text-xl font-bold text-white tabular-nums">
                     +7 (903) 371-04-00
                   </a>
-                  <a
-                    href="mailto:fmpuzikov@gmail.com"
-                    className="text-sm text-ink2 hover:text-ink transition-colors"
-                  >
+                  <a href="mailto:fmpuzikov@gmail.com" className="text-sm text-white/50 hover:text-white transition-colors">
                     fmpuzikov@gmail.com
                   </a>
                   <a
                     href="tel:+79033710400"
-                    className="mt-2 inline-flex items-center gap-2 px-5 py-3 bg-klein text-paper text-[11px] uppercase tracking-[0.12em] font-medium hover:bg-klein-deep transition-colors w-fit"
+                    className="mt-2 inline-flex items-center gap-2 px-5 py-3 rounded-full text-white text-[11px] uppercase tracking-[0.12em] font-bold w-fit"
+                    style={{ background: "#2155FF" }}
                   >
-                    <span aria-hidden className="text-paper/40 text-[9px] font-mono">+</span>
                     Связаться
                   </a>
                 </div>
