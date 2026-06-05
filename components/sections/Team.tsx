@@ -37,14 +37,11 @@ export function Team() {
         >
           <p className="eyebrow text-white/35 mb-5">Люди за звуком</p>
           <h2
-            className="font-display font-black text-white mb-4"
+            className="font-display font-black text-white"
             style={{ fontSize: "clamp(48px, 7vw, 104px)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
           >
             Команда.
           </h2>
-          <p className="text-white/50 text-lg max-w-sm">
-            Одиннадцать человек, держащих звук Юга.
-          </p>
         </motion.div>
       </div>
 
@@ -78,16 +75,6 @@ export function Team() {
         <div className="absolute inset-x-0 bottom-0" style={{ height: 120, background: "linear-gradient(to top, #020617, transparent)" }} />
       </motion.div>
 
-      <div className="container-page relative z-10 mt-8 md:mt-10">
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={photoInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-center text-white/30 text-sm tracking-widest uppercase"
-        >
-          В центре — Фёдор Пузиков. С 1994 года.
-        </motion.p>
-      </div>
     </section>
   );
 }

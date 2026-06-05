@@ -85,7 +85,7 @@ export function Services() {
           className="text-center text-white/40 text-base md:text-lg max-w-3xl mx-auto mt-20 md:mt-28"
           style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 48 }}
         >
-          Мы создаём технические решения для событий любого масштаба — от камерных концертов до городских праздников с десятками тысяч зрителей
+          Мы создаем технические решения для событий любого масштаба – от камерных концертов до городских праздников с десятками тысяч зрителей
         </motion.p>
       </div>
     </section>
