@@ -47,12 +47,10 @@ export function Hero() {
         Звук Вокруг — аренда звука, света, сцены и LED-экранов. Волгоград, Юг России. С 1994 года.
       </h1>
 
-      {/* Wave Background — только на десктопе, WebGL тяжёл на мобилке */}
-      {!isMobile && (
-        <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden>
-          <WaveBackground darkTheme resolutionScale={0.6} />
-        </div>
-      )}
+      {/* Wave Background — на мобилке пониженное разрешение */}
+      <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden>
+        <WaveBackground darkTheme resolutionScale={isMobile ? 0.3 : 0.6} />
+      </div>
 
       {/* bg-room overlay — поверх волны, создаёт глубину */}
       <div className="absolute inset-0 z-[1] pointer-events-none" aria-hidden>
@@ -107,15 +105,13 @@ export function Hero() {
         </motion.span>
       </motion.div>
 
-      {/* ── z-20: Orb — скрыт на мобилке ── */}
-      {!isMobile && (
-        <motion.div
-          style={{ y: orbY, scale: orbScale }}
-          className="absolute inset-0 z-20 flex items-center justify-center will-change-transform"
-        >
-          <RadialGlowOrb size="32vw" />
-        </motion.div>
-      )}
+      {/* ── z-20: Orb — на мобилке меньше и чуть выше центра ── */}
+      <motion.div
+        style={{ y: orbY, scale: orbScale, paddingTop: isMobile ? "28vh" : undefined }}
+        className={`absolute inset-0 z-20 flex pointer-events-none ${isMobile ? "items-start justify-center" : "items-center justify-center will-change-transform"}`}
+      >
+        <RadialGlowOrb size={isMobile ? "55vw" : "32vw"} />
+      </motion.div>
 
       {/* ── z-30: ВОКРУГ — перед orb ── */}
       <motion.div
@@ -132,7 +128,7 @@ export function Hero() {
             fontSize: isMobile ? "clamp(72px, 22vw, 120px)" : "clamp(88px, 18vw, 260px)",
             lineHeight: 0.86,
             letterSpacing: "-0.065em",
-            paddingBottom: isMobile ? "clamp(180px, 26vh, 260px)" : "clamp(220px, 28vh, 320px)",
+            paddingBottom: isMobile ? "clamp(260px, 38vh, 340px)" : "clamp(220px, 28vh, 320px)",
             paddingRight: "clamp(20px, 5vw, 80px)",
           }}
         >
