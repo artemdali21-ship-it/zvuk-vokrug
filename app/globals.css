@@ -51,11 +51,11 @@
 
   /* Section vertical rhythm */
   .section-py {
-    @apply py-32 md:py-48 lg:py-56;
+    @apply py-20 md:py-48 lg:py-56;
   }
 
   .section-py-large {
-    @apply py-40 md:py-56 lg:py-72;
+    @apply py-24 md:py-56 lg:py-72;
   }
 
   .stack-lg {
