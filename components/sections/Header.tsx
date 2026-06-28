@@ -45,7 +45,7 @@ export function Header() {
               alt="Звук Вокруг"
               width={280}
               height={200}
-              className="h-[36px] w-auto object-contain brightness-0 invert"
+              className="h-[48px] w-auto object-contain brightness-0 invert"
               priority
             />
           </Link>

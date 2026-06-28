@@ -30,7 +30,7 @@ export function Stats() {
       <NoiseOverlay />
       <div className="absolute top-0 inset-x-0 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
 
-      <div className="container-page relative z-10 pt-12 pb-12 md:pt-16 md:pb-16 lg:pt-20 lg:pb-20">
+      <div className="container-page relative z-10 pt-12 pb-12 md:pt-16 md:pb-12 lg:pt-28 lg:pb-16">
         <div ref={ref} className="grid grid-cols-2 gap-x-4 md:gap-x-0">
 
           {/* 30 лет */}
