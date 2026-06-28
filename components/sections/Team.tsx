@@ -41,7 +41,7 @@ export function Team() {
           className="absolute inset-0 scale-[1.22] will-change-transform"
         >
           <Image
-            src="/team/team-new-2.png"
+            src="/team/team-new-3.png"
             alt="Команда Звук Вокруг"
             fill
             sizes="100vw"

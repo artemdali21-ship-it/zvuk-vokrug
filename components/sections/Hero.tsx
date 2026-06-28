@@ -2,72 +2,205 @@
 
 import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import Image from "next/image";
-import { RadialGlowOrb } from "@/components/ui/RadialGlowOrb";
 import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
 import { ParallaxObject } from "@/components/ui/ParallaxObject";
-import WaveBackground from "@/components/ui/WaveBackground";
 
+// ─── Blue AetherHero shader ───────────────────────────────────────────────────
+const VERT = `#version 300 es
+precision highp float;
+in vec2 position;
+void main(){ gl_Position = vec4(position, 0.0, 1.0); }`;
+
+const FRAG = `#version 300 es
+precision highp float;
+out vec4 O;
+uniform float time;
+uniform vec2 resolution;
+#define FC gl_FragCoord.xy
+#define R resolution
+#define T time
+#define MN min(R.x,R.y)
+
+float pattern(vec2 uv) {
+  float d=.0;
+  for (float i=.0; i<3.; i++) {
+    uv.x+=sin(T*(1.+i)+uv.y*1.5)*.2;
+    d+=.005/abs(uv.x);
+  }
+  return d;
+}
+
+vec3 scene(vec2 uv) {
+  vec3 col=vec3(0);
+  uv=vec2(atan(uv.x,uv.y)*2./6.28318,-log(length(uv))+T);
+  for (float i=.0; i<3.; i++) {
+    int k=int(mod(i,3.));
+    col[k]+=pattern(uv+i*6./MN);
+  }
+  return col;
+}
+
+void main() {
+  vec2 uv=(FC-.5*R)/MN;
+  vec3 col=vec3(0);
+  float s=12., e=9e-4;
+  col+=e/(sin(uv.x*s)*cos(uv.y*s));
+  uv.y+=R.x>R.y?.5:.5*(R.y/R.x);
+  col+=scene(uv);
+
+  // Map to blue palette — site colors #020617 → #2155FF
+  float br = col.r*0.3 + col.g*0.4 + col.b*0.3;
+  col = vec3(
+    br*0.07 + col.b*0.10,
+    br*0.16 + col.b*0.22,
+    br*0.55 + col.b*0.85 + 0.04
+  ) * 1.45;
+
+  O=vec4(col,1.);
+}`;
+
+// ─── WebGL hook ──────────────────────────────────────────────────────────────
+function useShader(canvasRef: React.RefObject<HTMLCanvasElement | null>, active: boolean, dprMax = 2) {
+  // canvasRef is stable (useRef), safe to omit from deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!active) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const gl = canvas.getContext("webgl2", { alpha: true, antialias: false });
+    if (!gl) return;
+
+    // Compile
+    const compile = (src: string, type: number) => {
+      const sh = gl.createShader(type)!;
+      gl.shaderSource(sh, src);
+      gl.compileShader(sh);
+      return sh;
+    };
+    const vs = compile(VERT, gl.VERTEX_SHADER);
+    const fs = compile(FRAG, gl.FRAGMENT_SHADER);
+    const prog = gl.createProgram()!;
+    gl.attachShader(prog, vs);
+    gl.attachShader(prog, fs);
+    gl.linkProgram(prog);
+    gl.deleteShader(vs);
+    gl.deleteShader(fs);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+
+    // Buffer
+    const buf = gl.createBuffer()!;
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]), gl.STATIC_DRAW);
+    gl.useProgram(prog);
+    const posLoc = gl.getAttribLocation(prog, "position");
+    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+    const uTime = gl.getUniformLocation(prog, "time");
+    const uRes  = gl.getUniformLocation(prog, "resolution");
+    gl.clearColor(0.008, 0.024, 0.09, 1);
+
+    const fit = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, dprMax);
+      const r = canvas.getBoundingClientRect();
+      const w = Math.floor(r.width * dpr);
+      const h = Math.floor(r.height * dpr);
+      if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(canvas);
+
+    let raf: number;
+    const loop = (t: number) => {
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.useProgram(prog);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+      if (uTime) gl.uniform1f(uTime, t * 1e-3);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+      gl.deleteBuffer(buf);
+      gl.deleteProgram(prog);
+    };
+  }, [active, dprMax]);
+}
+
+// ─── Hero ─────────────────────────────────────────────────────────────────────
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
-  // На мобилке отключаем тяжёлый WebGL-шейдер и параллакс текста
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
     setIsMobile(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
+    const h = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", h);
+    return () => mq.removeEventListener("change", h);
   }, []);
 
   const disableParallax = prefersReducedMotion || isMobile;
+  const shaderActive = !prefersReducedMotion;
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
+  // Lower DPR on mobile for performance
+  useShader(canvasRef, shaderActive, isMobile ? 1 : 2);
+
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
 
   const zvukY   = useTransform(scrollYProgress, [0, 1], disableParallax ? ["0%", "0%"] : ["0%", "-35%"]);
   const vokrugY = useTransform(scrollYProgress, [0, 1], disableParallax ? ["0%", "0%"] : ["0%", "25%"]);
   const orbY    = useTransform(scrollYProgress, [0, 1], disableParallax ? ["0%", "0%"] : ["0%", "-15%"]);
-  const orbScale = useTransform(scrollYProgress, [0, 1], disableParallax ? [1, 1] : [1, 1.08]);
 
   return (
     <section
       ref={ref}
       className="relative min-h-[100dvh] overflow-hidden"
-      style={{
-        background: `linear-gradient(180deg, #020617 0%, #071133 100%)`,
-      }}
+      style={{ background: "#020617" }}
     >
-      {/* SEO h1 — screen reader only */}
       <h1 className="sr-only">
         Звук Вокруг — аренда звука, света, сцены и LED-экранов. Волгоград, Юг России. С 1994 года.
       </h1>
 
-      {/* Wave Background — на мобилке пониженное разрешение */}
-      <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden>
-        <WaveBackground darkTheme resolutionScale={isMobile ? 0.3 : 0.6} />
-      </div>
+      {/* Shader canvas */}
+      <canvas
+        ref={canvasRef}
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          display: "block",
+          userSelect: "none",
+          touchAction: "none",
+        }}
+      />
 
-      {/* bg-room overlay — поверх волны, создаёт глубину */}
-      <div className="absolute inset-0 z-[1] pointer-events-none" aria-hidden>
-        <Image
-          src="/bg/bg-room-corner.png"
-          fill
-          alt=""
-          style={{ objectFit: "cover", objectPosition: "center", opacity: 0.25 }}
-          priority
-          sizes="100vw"
-        />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(2,6,23,0.2) 0%, rgba(2,6,23,0.05) 50%, rgba(2,6,23,0.8) 100%)" }} />
-      </div>
+      {/* Gradient vignette — depth & readability */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "linear-gradient(180deg, rgba(2,6,23,0.55) 0%, rgba(2,6,23,0.0) 40%, rgba(2,6,23,0.85) 100%)",
+          pointerEvents: "none",
+          zIndex: 2,
+        }}
+      />
 
       <NoiseOverlay />
 
-      {/* Galaxy — right accent, только на десктопе */}
+      {/* Galaxy accent — desktop only */}
       {!isMobile && (
         <ParallaxObject
           src="/3d/obj-galaxy.png"
@@ -75,14 +208,14 @@ export function Hero() {
           top="0%"
           right="-18vw"
           parallax={0.3}
-          opacity={0.22}
+          opacity={0.18}
           zIndex={5}
           float
           sizes="1100px"
         />
       )}
 
-      {/* ── z-10: ЗВУК — за orb ── */}
+      {/* ЗВУК */}
       <motion.div
         style={{ y: zvukY }}
         className={`absolute inset-0 z-10 flex items-start justify-start pointer-events-none ${!isMobile ? "will-change-transform" : ""}`}
@@ -105,15 +238,23 @@ export function Hero() {
         </motion.span>
       </motion.div>
 
-      {/* ── z-20: Orb — на мобилке меньше и чуть выше центра ── */}
+      {/* Orb — blue glow on top of shader */}
       <motion.div
-        style={{ y: orbY, scale: orbScale, paddingTop: isMobile ? "28vh" : undefined }}
+        style={{ y: orbY, paddingTop: isMobile ? "28vh" : undefined }}
         className={`absolute inset-0 z-20 flex pointer-events-none ${isMobile ? "items-start justify-center" : "items-center justify-center will-change-transform"}`}
       >
-        <RadialGlowOrb size={isMobile ? "55vw" : "32vw"} />
+        <div
+          style={{
+            width: isMobile ? "55vw" : "32vw",
+            aspectRatio: "1",
+            borderRadius: "50%",
+            background: "radial-gradient(circle at 38% 38%, rgba(100,160,255,0.55) 0%, rgba(33,85,255,0.35) 40%, rgba(7,17,51,0.0) 70%)",
+            filter: "blur(2px)",
+          }}
+        />
       </motion.div>
 
-      {/* ── z-30: ВОКРУГ — перед orb ── */}
+      {/* ВОКРУГ */}
       <motion.div
         style={{ y: vokrugY }}
         className={`absolute inset-0 z-30 flex items-end justify-end pointer-events-none ${!isMobile ? "will-change-transform" : ""}`}
@@ -136,39 +277,33 @@ export function Hero() {
         </motion.span>
       </motion.div>
 
-      {/* ── z-40: Контент-блок снизу ── */}
+      {/* Bottom content */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.5 }}
         className="absolute bottom-0 left-0 right-0 z-40"
-        style={{ paddingBottom: "max(clamp(48px, 7vh, 80px), env(safe-area-inset-bottom, 0px))", paddingLeft: "clamp(20px, 5vw, 80px)", paddingRight: "clamp(20px, 5vw, 80px)" }}
+        style={{
+          paddingBottom: "max(clamp(48px, 7vh, 80px), env(safe-area-inset-bottom, 0px))",
+          paddingLeft: "clamp(20px, 5vw, 80px)",
+          paddingRight: "clamp(20px, 5vw, 80px)",
+        }}
       >
-        {/* Service line */}
         <p
           className="font-display font-black text-white mb-3"
-          style={{
-            fontSize: "clamp(20px, 3.5vw, 52px)",
-            lineHeight: 0.92,
-            letterSpacing: "-0.055em",
-          }}
+          style={{ fontSize: "clamp(20px, 3.5vw, 52px)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
         >
           ЗВУК&nbsp;&nbsp;СВЕТ&nbsp;&nbsp;СЦЕНА&nbsp;&nbsp;ЭКРАНЫ
         </p>
 
-        {/* Body */}
         <p className="text-white/60 text-sm md:text-lg mb-6 mt-3 max-w-xl">
           комплексное техническое обеспечение мероприятий
         </p>
 
-        {/* CTA */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 mb-8">
           <a
             href="mailto:fmpuzikov@gmail.com?subject=Запрос%20предложения"
-            className="inline-flex items-center justify-center px-6 py-3 rounded-full font-bold text-sm tracking-wide uppercase text-white transition-colors duration-200"
-            style={{ background: "#2155FF" }}
-            onMouseEnter={e => (e.currentTarget.style.background = "#346BFF")}
-            onMouseLeave={e => (e.currentTarget.style.background = "#2155FF")}
+            className="btn-primary inline-flex items-center justify-center px-6 py-3 rounded-full font-bold text-sm tracking-wide uppercase text-white"
           >
             Получить предложение
           </a>
@@ -180,7 +315,6 @@ export function Hero() {
           </a>
         </div>
 
-        {/* Geo — на мобилке только города, теги артистов убираем */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-10 pt-2">
           <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-white/35">
             Волгоград · Элиста · Астрахань · Саратов
