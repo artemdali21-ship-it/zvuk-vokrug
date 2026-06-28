@@ -2,7 +2,6 @@
 
 import { useRef, useState, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import Image from "next/image";
 import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
 
 // ─── Blue AetherHero shader ───────────────────────────────────────────────────
@@ -47,30 +46,24 @@ void main() {
   col+=e/(sin(uv.x*s)*cos(uv.y*s));
   uv.y+=R.x>R.y?.5:.5*(R.y/R.x);
   col+=scene(uv);
-
-  // Map to blue palette — site colors #020617 → #2155FF
   float br = col.r*0.3 + col.g*0.4 + col.b*0.3;
   col = vec3(
     br*0.07 + col.b*0.10,
     br*0.16 + col.b*0.22,
     br*0.55 + col.b*0.85 + 0.04
   ) * 1.45;
-
   O=vec4(col,1.);
 }`;
 
 // ─── WebGL hook ──────────────────────────────────────────────────────────────
 function useShader(canvasRef: React.RefObject<HTMLCanvasElement | null>, active: boolean, dprMax = 2) {
-  // canvasRef is stable (useRef), safe to omit from deps
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!active) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const gl = canvas.getContext("webgl2", { alpha: true, antialias: false });
     if (!gl) return;
-
     const compile = (src: string, type: number) => {
       const sh = gl.createShader(type)!;
       gl.shaderSource(sh, src);
@@ -80,57 +73,60 @@ function useShader(canvasRef: React.RefObject<HTMLCanvasElement | null>, active:
     const vs = compile(VERT, gl.VERTEX_SHADER);
     const fs = compile(FRAG, gl.FRAGMENT_SHADER);
     const prog = gl.createProgram()!;
-    gl.attachShader(prog, vs);
-    gl.attachShader(prog, fs);
-    gl.linkProgram(prog);
-    gl.deleteShader(vs);
-    gl.deleteShader(fs);
+    gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+    gl.deleteShader(vs); gl.deleteShader(fs);
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
-
     const buf = gl.createBuffer()!;
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]), gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,1,-1,-1,1,1,1,-1]), gl.STATIC_DRAW);
     gl.useProgram(prog);
     const posLoc = gl.getAttribLocation(prog, "position");
     gl.enableVertexAttribArray(posLoc);
     gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
-
     const uTime = gl.getUniformLocation(prog, "time");
     const uRes  = gl.getUniformLocation(prog, "resolution");
     gl.clearColor(0.008, 0.024, 0.09, 1);
-
     const fit = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, dprMax);
       const r = canvas.getBoundingClientRect();
-      const w = Math.floor(r.width * dpr);
-      const h = Math.floor(r.height * dpr);
+      const w = Math.floor(r.width * dpr), h = Math.floor(r.height * dpr);
       if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
       gl.viewport(0, 0, canvas.width, canvas.height);
     };
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(canvas);
-
     let raf: number;
     const loop = (t: number) => {
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.useProgram(prog);
-      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.clear(gl.COLOR_BUFFER_BIT); gl.useProgram(prog); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
       if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
       if (uTime) gl.uniform1f(uTime, t * 1e-3);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-      gl.deleteBuffer(buf);
-      gl.deleteProgram(prog);
-    };
+    return () => { cancelAnimationFrame(raf); ro.disconnect(); gl.deleteBuffer(buf); gl.deleteProgram(prog); };
   }, [active, dprMax]);
 }
+
+// ─── Animation variants ───────────────────────────────────────────────────────
+const lineVariant = {
+  hidden: { y: "110%", opacity: 0 },
+  visible: (i: number) => ({
+    y: "0%",
+    opacity: 1,
+    transition: { duration: 0.85, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] },
+  }),
+};
+
+const fadeVariant = {
+  hidden: { opacity: 0, y: 16 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, delay: 0.5 + i * 0.1, ease: [0.22, 1, 0.36, 1] },
+  }),
+};
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export function Hero() {
@@ -146,179 +142,142 @@ export function Hero() {
     return () => mq.removeEventListener("change", h);
   }, []);
 
-  const shaderActive = !prefersReducedMotion;
-  useShader(canvasRef, shaderActive, isMobile ? 1 : 2);
+  useShader(canvasRef, !prefersReducedMotion, isMobile ? 1 : 2);
 
   return (
     <section
-      className="relative min-h-[100dvh] overflow-hidden"
+      className="relative min-h-[100dvh] flex flex-col overflow-hidden"
       style={{ background: "#020617" }}
     >
       <h1 className="sr-only">
         Звук Вокруг — аренда звука, света, сцены и LED-экранов. Волгоград, Юг России. С 1994 года.
       </h1>
 
-      {/* Shader canvas */}
+      {/* Shader */}
       <canvas
         ref={canvasRef}
         aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          display: "block",
-          userSelect: "none",
-          touchAction: "none",
-        }}
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", userSelect: "none", touchAction: "none" }}
       />
 
-      {/* Gradient vignette */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(180deg, rgba(2,6,23,0.55) 0%, rgba(2,6,23,0.0) 40%, rgba(2,6,23,0.85) 100%)",
-          pointerEvents: "none",
-          zIndex: 2,
-        }}
-      />
+      {/* Vignette */}
+      <div aria-hidden style={{
+        position: "absolute", inset: 0, pointerEvents: "none", zIndex: 2,
+        background: "linear-gradient(180deg, rgba(2,6,23,0.65) 0%, rgba(2,6,23,0.0) 35%, rgba(2,6,23,0.75) 100%)",
+      }} />
 
       <NoiseOverlay />
 
-      {/* ── LAYER 1 (z-5): ЗВУК — atmospheric background text, top-left ── */}
-      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }}>
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.58 }}
-          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-          aria-hidden
-          className="font-display font-black text-white select-none absolute top-0 left-0"
-          style={{
-            fontSize: isMobile ? "clamp(72px, 22vw, 120px)" : "clamp(88px, 18vw, 260px)",
-            lineHeight: 0.86,
-            letterSpacing: "-0.065em",
-            paddingTop: isMobile ? "clamp(80px, 13vh, 130px)" : "clamp(100px, 14vh, 180px)",
-            paddingLeft: "clamp(20px, 5vw, 80px)",
-          }}
-        >
-          ЗВУК
-        </motion.span>
-      </div>
-
-      {/* ── LAYER 1 (z-5): ВОКРУГ — atmospheric background text, bottom-right ── */}
-      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }}>
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.58 }}
-          transition={{ duration: 1.1, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          aria-hidden
-          className="font-display font-black text-white select-none absolute bottom-0 right-0"
-          style={{
-            fontSize: isMobile ? "clamp(72px, 22vw, 120px)" : "clamp(88px, 18vw, 260px)",
-            lineHeight: 0.86,
-            letterSpacing: "-0.065em",
-            paddingBottom: isMobile ? "clamp(16px, 4vh, 40px)" : "clamp(16px, 4vh, 40px)",
-            paddingRight: "clamp(20px, 5vw, 80px)",
-          }}
-        >
-          ВОКРУГ
-        </motion.span>
-      </div>
-
-      {/* ── LAYER 2 (z-20): Vinyl — dominant hero object, upper-center ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.3, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute inset-0 pointer-events-none flex items-center justify-center"
-        style={{ zIndex: 20, paddingBottom: isMobile ? "28vh" : "32vh" }}
+      {/* ─── Main content ─────────────────────────────────────────────── */}
+      <div
+        className="relative flex flex-col flex-1"
+        style={{ zIndex: 10, paddingLeft: "clamp(20px, 5vw, 80px)", paddingRight: "clamp(20px, 5vw, 80px)" }}
       >
-        <motion.div
-          animate={{ y: [0, -12, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Image
-            src="/3d/vinyl-object.png"
-            alt=""
-            aria-hidden
-            width={700}
-            height={550}
-            style={{
-              width: isMobile ? "clamp(260px, 72vw, 400px)" : "clamp(420px, 48vw, 700px)",
-              height: "auto",
-              mixBlendMode: "multiply",
-              filter: "brightness(1.05) contrast(1.06)",
-              userSelect: "none",
-            } as React.CSSProperties}
-            priority
-          />
-        </motion.div>
-      </motion.div>
+        {/* Top spacer (nav height + breathing) */}
+        <div style={{ height: "clamp(100px, 16vh, 160px)" }} />
 
-      {/* Bottom content */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-        className="absolute bottom-0 left-0 right-0 z-40"
-      >
-        {/* Main content block */}
-        <div
-          style={{
-            paddingLeft: "clamp(20px, 5vw, 80px)",
-            paddingRight: "clamp(20px, 5vw, 80px)",
-          }}
-        >
-          <p
-            className="font-display font-black text-white mb-3"
-            style={{ fontSize: "clamp(20px, 3.5vw, 52px)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
+        {/* Headline — ЗВУК / ВОКРУГ with clip reveal */}
+        <div aria-hidden className="overflow-hidden mb-1">
+          <motion.span
+            className="block font-display font-black text-white select-none"
+            style={{ fontSize: "clamp(80px, 17vw, 248px)", lineHeight: 0.88, letterSpacing: "-0.065em" }}
+            custom={0}
+            initial="hidden"
+            animate="visible"
+            variants={lineVariant}
           >
-            ЗВУК&nbsp;&nbsp;СВЕТ&nbsp;&nbsp;СЦЕНА&nbsp;&nbsp;ЭКРАНЫ
-          </p>
-
-          <p className="text-white/60 text-sm md:text-lg mb-6 mt-3 max-w-xl">
-            комплексное техническое обеспечение мероприятий
-          </p>
-
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 mb-8">
-            <a
-              href="mailto:fmpuzikov@gmail.com?subject=Запрос%20предложения"
-              className="btn-primary inline-flex items-center justify-center px-6 py-3 rounded-full font-bold text-sm tracking-wide uppercase text-white"
-            >
-              Получить предложение
-            </a>
-            <a
-              href="tel:+79033710400"
-              className="text-white/60 text-sm hover:text-white transition-colors duration-200 underline-offset-4 hover:underline"
-            >
-              позвонить Фёдору
-            </a>
-          </div>
+            ЗВУК
+          </motion.span>
+        </div>
+        <div aria-hidden className="overflow-hidden">
+          <motion.span
+            className="block font-display font-black text-white select-none"
+            style={{ fontSize: "clamp(80px, 17vw, 248px)", lineHeight: 0.88, letterSpacing: "-0.065em" }}
+            custom={1}
+            initial="hidden"
+            animate="visible"
+            variants={lineVariant}
+          >
+            ВОКРУГ
+          </motion.span>
         </div>
 
-        {/* Locations — full-width display text at bottom */}
-        <div
+        {/* Thin divider */}
+        <motion.div
+          custom={0}
+          initial="hidden"
+          animate="visible"
+          variants={fadeVariant}
+          style={{ height: 1, background: "rgba(255,255,255,0.18)", marginTop: "clamp(20px, 3vh, 36px)", marginBottom: "clamp(20px, 3vh, 36px)", maxWidth: "clamp(240px, 40vw, 560px)" }}
+        />
+
+        {/* Subtitle + meta */}
+        <motion.p
+          custom={1}
+          initial="hidden"
+          animate="visible"
+          variants={fadeVariant}
+          className="text-white/55 mb-1"
+          style={{ fontSize: "clamp(14px, 1.4vw, 20px)", lineHeight: 1.5, maxWidth: "44ch" }}
+        >
+          Комплексное техническое обеспечение мероприятий
+        </motion.p>
+        <motion.p
+          custom={2}
+          initial="hidden"
+          animate="visible"
+          variants={fadeVariant}
+          className="text-white/30 mb-8 md:mb-12"
+          style={{ fontSize: "clamp(11px, 0.9vw, 13px)", letterSpacing: "0.12em", textTransform: "uppercase" }}
+        >
+          Волгоград · с 1994 года
+        </motion.p>
+
+        {/* CTA */}
+        <motion.div
+          custom={3}
+          initial="hidden"
+          animate="visible"
+          variants={fadeVariant}
+          className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5"
+        >
+          <a
+            href="mailto:fmpuzikov@gmail.com?subject=Запрос%20предложения"
+            className="btn-primary inline-flex items-center justify-center px-7 py-3.5 rounded-full font-bold text-sm tracking-wide uppercase text-white w-fit"
+          >
+            Получить предложение
+          </a>
+          <a
+            href="tel:+79033710400"
+            className="text-white/55 text-sm hover:text-white transition-colors duration-200 underline-offset-4 hover:underline"
+          >
+            позвонить Фёдору&nbsp; +7 (903) 371-04-00
+          </a>
+        </motion.div>
+
+        {/* Flex spacer */}
+        <div className="flex-1" />
+
+        {/* Location — full-width display text at bottom */}
+        <motion.div
+          custom={4}
+          initial="hidden"
+          animate="visible"
+          variants={fadeVariant}
           style={{
-            paddingLeft: "clamp(20px, 5vw, 80px)",
-            paddingBottom: "max(clamp(32px, 5vh, 56px), env(safe-area-inset-bottom, 0px))",
-            borderTop: "1px solid rgba(255,255,255,0.07)",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
             paddingTop: "clamp(16px, 2vh, 24px)",
+            paddingBottom: "max(clamp(28px, 4vh, 48px), env(safe-area-inset-bottom, 0px))",
           }}
         >
           <p
-            className="font-display font-black text-white/45 select-none"
-            style={{
-              fontSize: "clamp(22px, 4.5vw, 64px)",
-              letterSpacing: "-0.04em",
-              lineHeight: 0.92,
-            }}
+            className="font-display font-black text-white/40 select-none"
+            style={{ fontSize: "clamp(20px, 4vw, 58px)", letterSpacing: "-0.04em", lineHeight: 0.92 }}
           >
             Волгоград&nbsp;·&nbsp;Элиста&nbsp;·&nbsp;Астрахань&nbsp;·&nbsp;Саратов
           </p>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </section>
   );
 }
