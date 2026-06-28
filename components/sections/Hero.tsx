@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
 
 // ─── Blue AetherHero shader ───────────────────────────────────────────────────
@@ -185,6 +186,37 @@ export function Hero() {
       />
 
       <NoiseOverlay />
+
+      {/* Vinyl object — centered 3D object */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.2, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
+        style={{ paddingBottom: isMobile ? "15vh" : "8vh" }}
+      >
+        <motion.div
+          animate={{ y: [0, -14, 0] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <Image
+            src="/3d/vinyl-object.png"
+            alt=""
+            aria-hidden
+            width={600}
+            height={520}
+            style={{
+              width: isMobile ? "clamp(240px, 70vw, 380px)" : "clamp(380px, 40vw, 640px)",
+              height: "auto",
+              mixBlendMode: "multiply",
+              filter: "brightness(1.06) contrast(1.05)",
+              userSelect: "none",
+              draggable: false,
+            } as React.CSSProperties}
+            priority
+          />
+        </motion.div>
+      </motion.div>
 
       {/* ЗВУК — fixed, no parallax */}
       <div className="absolute inset-0 z-10 flex items-start justify-start pointer-events-none">
