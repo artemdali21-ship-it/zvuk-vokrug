@@ -187,50 +187,19 @@ export function Hero() {
 
       <NoiseOverlay />
 
-      {/* Vinyl object — centered 3D object */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
-        style={{ paddingBottom: isMobile ? "15vh" : "8vh" }}
-      >
-        <motion.div
-          animate={{ y: [0, -14, 0] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Image
-            src="/3d/vinyl-object.png"
-            alt=""
-            aria-hidden
-            width={600}
-            height={520}
-            style={{
-              width: isMobile ? "clamp(240px, 70vw, 380px)" : "clamp(380px, 40vw, 640px)",
-              height: "auto",
-              mixBlendMode: "multiply",
-              filter: "brightness(1.06) contrast(1.05)",
-              userSelect: "none",
-              draggable: false,
-            } as React.CSSProperties}
-            priority
-          />
-        </motion.div>
-      </motion.div>
-
-      {/* ЗВУК — fixed, no parallax */}
-      <div className="absolute inset-0 z-10 flex items-start justify-start pointer-events-none">
+      {/* ── LAYER 1 (z-5): ЗВУК — atmospheric background text, top-left ── */}
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }}>
         <motion.span
-          initial={{ y: 48, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.58 }}
+          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
           aria-hidden
-          className="font-display font-black text-white select-none"
+          className="font-display font-black text-white select-none absolute top-0 left-0"
           style={{
             fontSize: isMobile ? "clamp(72px, 22vw, 120px)" : "clamp(88px, 18vw, 260px)",
             lineHeight: 0.86,
             letterSpacing: "-0.065em",
-            paddingTop: isMobile ? "clamp(80px, 14vh, 140px)" : "clamp(120px, 18vh, 200px)",
+            paddingTop: isMobile ? "clamp(80px, 13vh, 130px)" : "clamp(100px, 14vh, 180px)",
             paddingLeft: "clamp(20px, 5vw, 80px)",
           }}
         >
@@ -238,25 +207,55 @@ export function Hero() {
         </motion.span>
       </div>
 
-      {/* ВОКРУГ — fixed, no parallax */}
-      <div className="absolute inset-0 z-30 flex items-end justify-end pointer-events-none">
+      {/* ── LAYER 1 (z-5): ВОКРУГ — atmospheric background text, bottom-right ── */}
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }}>
         <motion.span
-          initial={{ y: 48, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.58 }}
+          transition={{ duration: 1.1, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           aria-hidden
-          className="font-display font-black text-white select-none"
+          className="font-display font-black text-white select-none absolute bottom-0 right-0"
           style={{
             fontSize: isMobile ? "clamp(72px, 22vw, 120px)" : "clamp(88px, 18vw, 260px)",
             lineHeight: 0.86,
             letterSpacing: "-0.065em",
-            paddingBottom: isMobile ? "clamp(260px, 38vh, 340px)" : "clamp(220px, 28vh, 320px)",
+            paddingBottom: isMobile ? "clamp(16px, 4vh, 40px)" : "clamp(16px, 4vh, 40px)",
             paddingRight: "clamp(20px, 5vw, 80px)",
           }}
         >
           ВОКРУГ
         </motion.span>
       </div>
+
+      {/* ── LAYER 2 (z-20): Vinyl — dominant hero object, upper-center ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.3, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute inset-0 pointer-events-none flex items-center justify-center"
+        style={{ zIndex: 20, paddingBottom: isMobile ? "28vh" : "32vh" }}
+      >
+        <motion.div
+          animate={{ y: [0, -12, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <Image
+            src="/3d/vinyl-object.png"
+            alt=""
+            aria-hidden
+            width={700}
+            height={550}
+            style={{
+              width: isMobile ? "clamp(260px, 72vw, 400px)" : "clamp(420px, 48vw, 700px)",
+              height: "auto",
+              mixBlendMode: "multiply",
+              filter: "brightness(1.05) contrast(1.06)",
+              userSelect: "none",
+            } as React.CSSProperties}
+            priority
+          />
+        </motion.div>
+      </motion.div>
 
       {/* Bottom content */}
       <motion.div
