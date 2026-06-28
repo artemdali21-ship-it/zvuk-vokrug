@@ -21,7 +21,7 @@ export function Team() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden pt-10 pb-24 md:pt-12 md:pb-48 lg:pb-56"
+      className="relative overflow-hidden pt-0 pb-0"
       style={{ background: "#020617" }}
     >
       <NoiseOverlay />
