@@ -29,7 +29,7 @@ export function Hero() {
           alt=""
           fill
           priority
-          className="object-cover [object-position:40%_50%] md:[object-position:center]"
+          className="object-contain [object-position:center_bottom] md:object-cover md:[object-position:center]"
           sizes="100vw"
           quality={95}
         />
@@ -42,10 +42,10 @@ export function Hero() {
           position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
           background: [
             "linear-gradient(180deg,",
-            "rgba(2,6,23,0.72) 0%,",
-            "rgba(2,6,23,0.45) 16%,",
-            "rgba(2,6,23,0.06) 50%,",
-            "rgba(2,6,23,0.60) 100%)",
+            "rgba(2,6,23,0.78) 0%,",
+            "rgba(2,6,23,0.50) 14%,",
+            "rgba(2,6,23,0.04) 48%,",
+            "rgba(2,6,23,0.12) 100%)",
           ].join(" "),
         }}
       />
