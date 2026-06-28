@@ -10,24 +10,27 @@ export function Stats() {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section className="relative overflow-hidden" style={{ background: "#030817" }}>
-      {/* Background photo */}
+    <section
+      className="relative overflow-hidden"
+      style={{ background: "#030817", minHeight: "clamp(420px, 66.67vw, 980px)" }}
+    >
+      {/* Background photo — full room visible, no crop */}
       <div className="absolute inset-0 z-0" aria-hidden>
         <Image
           src="/bg/bg-room-corner.png"
           alt=""
           fill
-          className="object-cover object-center"
+          className="object-contain object-center"
           sizes="100vw"
           quality={90}
         />
-        <div className="absolute inset-0" style={{ background: "rgba(2,6,23,0.55)" }} />
+        <div className="absolute inset-0" style={{ background: "rgba(2,6,23,0.50)" }} />
       </div>
 
       <NoiseOverlay />
       <div className="absolute top-0 inset-x-0 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
 
-      <div className="container-page relative z-10 pt-12 pb-0 md:pt-16 md:pb-0 lg:pt-20 lg:pb-0">
+      <div className="container-page relative z-10 pt-12 pb-12 md:pt-16 md:pb-16 lg:pt-20 lg:pb-20">
         <div ref={ref} className="grid grid-cols-1 md:grid-cols-2">
 
           {/* 30 лет */}

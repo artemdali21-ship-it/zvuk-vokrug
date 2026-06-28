@@ -36,7 +36,7 @@ export function Header() {
           borderBottom: "1px solid rgba(255,255,255,0.07)",
         }}
       >
-        <div className="container-page flex items-center justify-between h-[72px] md:h-[88px]">
+        <div className="container-page flex items-center justify-between h-[54px] md:h-[68px]">
 
           {/* Logo */}
           <Link href="/" className="shrink-0 hover:opacity-80 transition-opacity duration-200" aria-label="Звук Вокруг — на главную">
@@ -45,7 +45,7 @@ export function Header() {
               alt="Звук Вокруг"
               width={280}
               height={200}
-              className="h-[64px] w-auto object-contain brightness-0 invert"
+              className="h-[36px] w-auto object-contain brightness-0 invert"
               priority
             />
           </Link>

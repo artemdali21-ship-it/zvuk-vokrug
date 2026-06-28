@@ -57,11 +57,11 @@ export function Hero() {
         className="relative flex flex-col flex-1 items-center text-center"
         style={{ zIndex: 10, paddingLeft: "clamp(20px, 5vw, 80px)", paddingRight: "clamp(20px, 5vw, 80px)" }}
       >
-        {/* Nav spacer — smaller so CTA sits higher */}
-        <div style={{ height: "clamp(60px, 8vh, 90px)" }} />
+        {/* Nav spacer — clears fixed header (54px mobile / 70px desktop) */}
+        <div style={{ height: "clamp(80px, 11vh, 120px)" }} />
 
         {/* Logo eyebrow — bigger, more space before divider */}
-        <motion.div {...fade(0)} style={{ marginBottom: "clamp(20px, 3.2vh, 42px)" }}>
+        <motion.div {...fade(0)} style={{ marginBottom: "clamp(32px, 5vh, 70px)" }}>
           <Image
             src="/logo.png"
             alt="Звук Вокруг"
@@ -81,24 +81,21 @@ export function Hero() {
           }}
         />
 
-        {/* Perspective text block — logo small top, headline large bottom = depth illusion */}
+        {/* Perspective text block — перспектива только на md+, mobile без transform (SEAM-020) */}
         <motion.div
           {...fade(0.2)}
           style={{
-            perspective: "700px",
-            perspectiveOrigin: "50% 100%",
             marginBottom: "clamp(6px, 1vh, 12px)",
+            overflow: "hidden",
           }}
         >
           <p
-            className="font-display font-black text-white uppercase"
+            className="font-display font-black text-white uppercase hero-perspective-text"
             style={{
               fontSize: "clamp(30px, 5.8vw, 92px)",
               lineHeight: 1.0,
               letterSpacing: "-0.01em",
               maxWidth: "13ch",
-              transform: "perspective(700px) rotateX(18deg)",
-              transformOrigin: "bottom center",
             }}
           >
             КОМПЛЕКСНОЕ ТЕХНИЧЕСКОЕ ОБЕСПЕЧЕНИЕ
@@ -139,16 +136,24 @@ export function Hero() {
             borderTop: "1px solid rgba(255,255,255,0.08)",
             paddingTop: "clamp(14px, 2vh, 24px)",
             paddingBottom: "max(clamp(20px, 3vh, 36px), env(safe-area-inset-bottom, 0px))",
+            paddingLeft: "clamp(20px, 5vw, 80px)",
+            paddingRight: "clamp(20px, 5vw, 80px)",
             width: "calc(100% + 2 * clamp(20px, 5vw, 80px))",
             marginLeft: "calc(-1 * clamp(20px, 5vw, 80px))",
           }}
         >
-          <p
-            className="text-white/25 uppercase select-none"
-            style={{ fontSize: "clamp(11px, 2.4vw, 36px)", letterSpacing: "0.06em" }}
+          <div
+            className="flex items-center justify-between w-full uppercase select-none"
+            style={{ color: "rgba(255,255,255,0.25)", fontSize: "clamp(12px, 2.6vw, 42px)", letterSpacing: "0.04em" }}
           >
-            Волгоград&nbsp;·&nbsp;Элиста&nbsp;·&nbsp;Астрахань&nbsp;·&nbsp;Саратов
-          </p>
+            <span>Волгоград</span>
+            <span style={{ opacity: 0.5 }}>·</span>
+            <span>Элиста</span>
+            <span style={{ opacity: 0.5 }}>·</span>
+            <span>Астрахань</span>
+            <span style={{ opacity: 0.5 }}>·</span>
+            <span>Саратов</span>
+          </div>
         </motion.div>
       </div>
     </section>

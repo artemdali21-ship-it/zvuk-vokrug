@@ -156,3 +156,14 @@
 .animate-float {
   animation: float 9s ease-in-out infinite;
 }
+
+/* ── Hero headline — perspective только на desktop ── */
+.hero-perspective-text {
+  /* mobile: без перспективы — нет overflow за края */
+}
+@media (min-width: 768px) {
+  .hero-perspective-text {
+    transform: perspective(700px) rotateX(18deg);
+    transform-origin: bottom center;
+  }
+}
