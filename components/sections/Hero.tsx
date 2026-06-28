@@ -142,7 +142,10 @@ export function Hero() {
           мероприятий · с&nbsp;1994
         </motion.p>
 
-        {/* CTA — raised for air between button and objects */}
+        {/* Mobile spacer: push CTA below statue's arm (iPhone 12 Pro arm at ~55% vh) */}
+        <div className="md:hidden" style={{ height: "clamp(48px, 7vh, 72px)" }} />
+
+        {/* CTA */}
         <motion.div {...fade(0.4)} className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5">
           <a
             href="mailto:fmpuzikov@gmail.com?subject=Запрос%20предложения"
