@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -13,6 +13,9 @@ const fade = (delay: number) => ({
 });
 
 export function Hero() {
+  const { scrollY } = useScroll();
+  const headlineY = useTransform(scrollY, [0, 600], [0, -80]);
+
   return (
     <section
       className="relative min-h-[100dvh] flex flex-col overflow-hidden"
@@ -109,10 +112,11 @@ export function Hero() {
         />
 
         {/* Perspective text block — перспектива только на md+, mobile без transform (SEAM-020) */}
+        {/* Parallax wrapper — двигает заголовок медленнее фона при скролле */}
+        <motion.div style={{ y: headlineY, marginBottom: "clamp(4px, 0.6vh, 8px)" }}>
         <motion.div
           {...fade(0.2)}
           style={{
-            marginBottom: "clamp(4px, 0.6vh, 8px)",
             overflow: "hidden",
           }}
         >
@@ -127,6 +131,7 @@ export function Hero() {
           >
             КОМПЛЕКСНОЕ ТЕХНИЧЕСКОЕ ОБЕСПЕЧЕНИЕ
           </p>
+        </motion.div>
         </motion.div>
 
         <motion.p
