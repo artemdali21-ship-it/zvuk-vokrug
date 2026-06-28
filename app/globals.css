@@ -86,6 +86,26 @@
     }
   }
 
+  /* Buttons */
+  .btn-primary {
+    background: #2155FF;
+    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .btn-primary:hover {
+    background: #346BFF;
+    box-shadow: 0 0 28px rgba(33, 85, 255, 0.45), 0 0 56px rgba(33, 85, 255, 0.15);
+    transform: translateY(-1px);
+  }
+  .btn-outline {
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  }
+  .btn-outline:hover {
+    border-color: rgba(255, 255, 255, 0.48);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-1px);
+  }
+
   /* Scrollbar hide */
   .scrollbar-none {
     scrollbar-width: none;
