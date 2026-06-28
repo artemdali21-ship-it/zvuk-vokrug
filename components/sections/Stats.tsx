@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import Image from "next/image";
 import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
 
 export function Stats() {
@@ -10,6 +11,19 @@ export function Stats() {
 
   return (
     <section className="relative overflow-hidden" style={{ background: "#030817" }}>
+      {/* Background photo */}
+      <div className="absolute inset-0 z-0" aria-hidden>
+        <Image
+          src="/bg/bg-room-corner.png"
+          alt=""
+          fill
+          className="object-cover object-center"
+          sizes="100vw"
+          quality={90}
+        />
+        <div className="absolute inset-0" style={{ background: "rgba(2,6,23,0.55)" }} />
+      </div>
+
       <NoiseOverlay />
       <div className="absolute top-0 inset-x-0 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
 
