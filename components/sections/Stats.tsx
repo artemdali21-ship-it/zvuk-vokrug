@@ -12,39 +12,39 @@ export function Stats() {
   return (
     <section
       className="relative overflow-hidden"
-      style={{ background: "#030817", minHeight: "clamp(420px, 66.67vw, 980px)" }}
+      style={{ background: "#030817" }}
     >
-      {/* Background photo — full room visible, no crop */}
+      {/* Background — object-cover object-top: показывает верхнюю часть (стены) */}
       <div className="absolute inset-0 z-0" aria-hidden>
         <Image
           src="/bg/bg-room-corner.png"
           alt=""
           fill
-          className="object-contain object-center"
+          className="object-cover [object-position:center_top]"
           sizes="100vw"
           quality={90}
         />
-        <div className="absolute inset-0" style={{ background: "rgba(2,6,23,0.50)" }} />
+        <div className="absolute inset-0" style={{ background: "rgba(2,6,23,0.42)" }} />
       </div>
 
       <NoiseOverlay />
       <div className="absolute top-0 inset-x-0 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
 
       <div className="container-page relative z-10 pt-12 pb-12 md:pt-16 md:pb-16 lg:pt-20 lg:pb-20">
-        <div ref={ref} className="grid grid-cols-1 md:grid-cols-2">
+        <div ref={ref} className="grid grid-cols-2 gap-x-4 md:gap-x-0">
 
           {/* 30 лет */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col pb-16 md:pb-0 md:pr-16 lg:pr-24"
+            className="flex flex-col md:pr-16 lg:pr-24"
           >
             {/* L1 — Доминанта */}
             <div
               className="font-display font-black text-white tabular-nums select-none"
               style={{
-                fontSize: "clamp(96px, 14vw, 212px)",
+                fontSize: "clamp(52px, 14vw, 212px)",
                 letterSpacing: "-0.07em",
                 lineHeight: 0.82,
                 marginLeft: "-0.03em",
@@ -55,15 +55,15 @@ export function Stats() {
 
             {/* L2 — Метка */}
             <p
-              className="font-display font-black uppercase text-white mt-7"
-              style={{ fontSize: "clamp(13px, 1.5vw, 21px)", letterSpacing: "0.08em" }}
+              className="font-display font-black uppercase text-white mt-5 md:mt-7"
+              style={{ fontSize: "clamp(10px, 1.5vw, 21px)", letterSpacing: "0.08em" }}
             >
               ЛЕТ ОПЫТА
             </p>
 
-            {/* L3 — Описание */}
+            {/* L3 — Описание: только md+ */}
             <p
-              className="mt-4"
+              className="mt-4 hidden md:block"
               style={{
                 fontSize: "clamp(13px, 1.05vw, 15.5px)",
                 color: "rgba(255,255,255,0.40)",
@@ -76,7 +76,7 @@ export function Stats() {
 
             {/* L4 — Мета */}
             <p
-              className="mt-6 uppercase"
+              className="mt-4 md:mt-6 uppercase"
               style={{ fontSize: 10, color: "rgba(255,255,255,0.22)", letterSpacing: "0.14em" }}
             >
               Волгоград · С 1994
@@ -88,13 +88,13 @@ export function Stats() {
             initial={{ opacity: 0, y: 40 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1.0, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col pt-16 md:pt-0 col-indent-left"
+            className="flex flex-col col-indent-left"
           >
             {/* L1 — Доминанта */}
             <div
               className="font-display font-black text-white tabular-nums select-none"
               style={{
-                fontSize: "clamp(96px, 14vw, 212px)",
+                fontSize: "clamp(52px, 14vw, 212px)",
                 letterSpacing: "-0.07em",
                 lineHeight: 0.82,
                 marginLeft: "-0.03em",
@@ -105,15 +105,15 @@ export function Stats() {
 
             {/* L2 — Метка */}
             <p
-              className="font-display font-black uppercase text-white mt-7"
-              style={{ fontSize: "clamp(13px, 1.5vw, 21px)", letterSpacing: "0.08em" }}
+              className="font-display font-black uppercase text-white mt-5 md:mt-7"
+              style={{ fontSize: "clamp(10px, 1.5vw, 21px)", letterSpacing: "0.08em" }}
             >
               МЕРОПРИЯТИЙ
             </p>
 
-            {/* L3 — Описание */}
+            {/* L3 — Описание: только md+ */}
             <p
-              className="mt-4"
+              className="mt-4 hidden md:block"
               style={{
                 fontSize: "clamp(13px, 1.05vw, 15.5px)",
                 color: "rgba(255,255,255,0.40)",
@@ -126,7 +126,7 @@ export function Stats() {
 
             {/* L4 — Мета */}
             <p
-              className="mt-6 uppercase"
+              className="mt-4 md:mt-6 uppercase"
               style={{ fontSize: 10, color: "rgba(255,255,255,0.22)", letterSpacing: "0.14em" }}
             >
               Юг России · Международный уровень
