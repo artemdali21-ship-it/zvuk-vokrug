@@ -35,7 +35,7 @@ export function Stats() {
             initial={{ opacity: 0, y: 40 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col pb-16 md:pb-0 col-border-right md:pr-16 lg:pr-24"
+            className="flex flex-col pb-16 md:pb-0 md:pr-16 lg:pr-24"
           >
             {/* L1 — Доминанта */}
             <div
@@ -86,7 +86,6 @@ export function Stats() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1.0, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col pt-16 md:pt-0 col-indent-left"
-            style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
           >
             {/* L1 — Доминанта */}
             <div
