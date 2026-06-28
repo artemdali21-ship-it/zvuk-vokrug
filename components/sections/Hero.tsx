@@ -57,17 +57,17 @@ export function Hero() {
         className="relative flex flex-col flex-1 items-center text-center"
         style={{ zIndex: 10, paddingLeft: "clamp(20px, 5vw, 80px)", paddingRight: "clamp(20px, 5vw, 80px)" }}
       >
-        {/* Nav spacer */}
-        <div style={{ height: "clamp(80px, 13vh, 130px)" }} />
+        {/* Nav spacer — smaller so CTA sits higher */}
+        <div style={{ height: "clamp(60px, 8vh, 90px)" }} />
 
-        {/* Logo eyebrow — replaces text "ЗВУК ВОКРУГ" */}
-        <motion.div {...fade(0)} style={{ marginBottom: "clamp(12px, 1.8vh, 22px)" }}>
+        {/* Logo eyebrow — bigger, more space before divider */}
+        <motion.div {...fade(0)} style={{ marginBottom: "clamp(20px, 3.2vh, 42px)" }}>
           <Image
             src="/logo.png"
             alt="Звук Вокруг"
-            width={100}
-            height={70}
-            className="h-[clamp(32px,4vh,52px)] w-auto object-contain brightness-0 invert opacity-65"
+            width={160}
+            height={112}
+            className="h-[clamp(46px,6vh,72px)] w-auto object-contain brightness-0 invert opacity-70"
           />
         </motion.div>
 
@@ -77,7 +77,7 @@ export function Hero() {
           style={{
             height: 1, width: "clamp(40px, 6vw, 80px)",
             background: "rgba(255,255,255,0.22)",
-            marginBottom: "clamp(12px, 1.8vh, 22px)",
+            marginBottom: "clamp(14px, 2vh, 26px)",
           }}
         />
 
@@ -108,7 +108,7 @@ export function Hero() {
         <motion.p
           {...fade(0.3)}
           className="font-display font-black text-white/50 uppercase"
-          style={{ fontSize: "clamp(11px, 1.2vw, 17px)", letterSpacing: "0.18em", marginBottom: "clamp(20px, 3vh, 40px)" }}
+          style={{ fontSize: "clamp(11px, 1.2vw, 17px)", letterSpacing: "0.18em", marginBottom: "clamp(12px, 1.8vh, 24px)" }}
         >
           мероприятий · с&nbsp;1994
         </motion.p>
@@ -144,8 +144,8 @@ export function Hero() {
           }}
         >
           <p
-            className="text-white/25 uppercase select-none tracking-widest"
-            style={{ fontSize: "clamp(13px, 3.2vw, 52px)", letterSpacing: "clamp(0.12em, 0.8vw, 0.35em)" }}
+            className="text-white/25 uppercase select-none"
+            style={{ fontSize: "clamp(11px, 2.4vw, 36px)", letterSpacing: "0.06em" }}
           >
             Волгоград&nbsp;·&nbsp;Элиста&nbsp;·&nbsp;Астрахань&nbsp;·&nbsp;Саратов
           </p>
