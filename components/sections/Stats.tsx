@@ -27,7 +27,7 @@ export function Stats() {
       <NoiseOverlay />
       <div className="absolute top-0 inset-x-0 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
 
-      <div className="container-page relative z-10 py-24 md:py-44 lg:py-56">
+      <div className="container-page relative z-10 py-16 md:py-24 lg:py-32">
         <div ref={ref} className="grid grid-cols-1 md:grid-cols-2">
 
           {/* 30 лет */}
