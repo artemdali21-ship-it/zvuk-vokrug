@@ -69,17 +69,6 @@ export function GallerySection() {
     >
       <NoiseOverlay />
 
-      {/* Header */}
-      <div className="container-page relative z-10 mb-14 md:mb-20">
-        <p className="eyebrow text-white/30 mb-4">Портфолио</p>
-        <h2
-          className="font-display font-black text-white"
-          style={{ fontSize: "clamp(48px, 7vw, 104px)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
-        >
-          НАШИ РАБОТЫ
-        </h2>
-      </div>
-
       <div className="relative z-10 flex flex-col gap-4">
         {/* Row 1 — влево */}
         <div

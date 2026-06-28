@@ -14,10 +14,76 @@ const categories = [
   { n: "06", title: "СПОРТИВНЫЕ СОБЫТИЯ",                 photo: "/photos/f4ca6ed7.jpg" },
 ];
 
+// Карточка с текстом поверх фото
+function CategoryCard({
+  cat,
+  index,
+  inView,
+  sizes,
+  radius = 12,
+}: {
+  cat: typeof categories[0];
+  index: number;
+  inView: boolean;
+  sizes: string;
+  radius?: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
+      className="group cursor-default"
+    >
+      <div
+        className="relative overflow-hidden"
+        style={{ aspectRatio: "3/4", borderRadius: radius }}
+      >
+        <Image
+          src={cat.photo}
+          alt={cat.title}
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          sizes={sizes}
+        />
+        {/* Gradient — тёмнее снизу и сверху для читаемости текста */}
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(to bottom, rgba(2,6,23,0.35) 0%, rgba(2,6,23,0.15) 40%, rgba(2,6,23,0.75) 100%)" }}
+        />
+        {/* Blue hover tint */}
+        <div
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{ background: "rgba(33,85,255,0.15)" }}
+        />
+        {/* Номер — маленький, верхний угол */}
+        <span
+          className="absolute top-2.5 left-3 font-display font-black tabular-nums"
+          style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", letterSpacing: "0.06em" }}
+        >
+          {cat.n}
+        </span>
+        {/* Название — по центру карточки, крупно */}
+        <div className="absolute inset-0 flex items-center justify-center p-3">
+          <h3
+            className="font-display font-black text-white text-center uppercase group-hover:scale-[1.03] transition-transform duration-300"
+            style={{
+              fontSize: "clamp(13px, 1.6vw, 22px)",
+              letterSpacing: "-0.02em",
+              lineHeight: 1.1,
+              textShadow: "0 2px 16px rgba(0,0,0,0.7)",
+            }}
+          >
+            {cat.title}
+          </h3>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 // ─── Mobile: простой скролл, никакой sticky-механики ─────────────────────────
 function EventCategoriesMobile() {
-  const headRef = useRef<HTMLDivElement>(null);
-  const headInView = useInView(headRef, { once: true, margin: "-20px" });
   const gridRef = useRef<HTMLDivElement>(null);
   const gridInView = useInView(gridRef, { once: true, margin: "-20px" });
 
@@ -37,66 +103,17 @@ function EventCategoriesMobile() {
       </div>
       <NoiseOverlay />
 
-      <div className="container-page relative z-10">
-        {/* Header */}
-        <motion.div
-          ref={headRef}
-          initial={{ opacity: 0, y: 20 }}
-          animate={headInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-8"
-        >
-          <p className="eyebrow text-white/35 mb-4">Специализация</p>
-          <h2
-            className="font-display font-black text-white"
-            style={{ fontSize: "clamp(36px, 10vw, 72px)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
-          >
-            Для каких событий.
-          </h2>
-        </motion.div>
-
-        {/* Grid 2-col */}
-        <div ref={gridRef} className="grid grid-cols-2 gap-2">
-          {categories.map((cat, i) => (
-            <motion.div
-              key={cat.n}
-              initial={{ opacity: 0, y: 12 }}
-              animate={gridInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div
-                className="relative overflow-hidden"
-                style={{ aspectRatio: "3/4", borderRadius: 10 }}
-              >
-                <Image
-                  src={cat.photo}
-                  alt={cat.title}
-                  fill
-                  className="object-cover"
-                  sizes="50vw"
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{ background: "linear-gradient(to bottom, rgba(2,6,23,0.0) 30%, rgba(2,6,23,0.8) 100%)" }}
-                />
-                <span
-                  className="absolute top-2 left-2.5 font-display font-black tabular-nums"
-                  style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", letterSpacing: "0.06em" }}
-                >
-                  {cat.n}
-                </span>
-              </div>
-              <div className="mt-1.5 px-0.5">
-                <h3
-                  className="font-display font-black text-white/70 uppercase"
-                  style={{ fontSize: "clamp(9px, 2.8vw, 12px)", letterSpacing: "0.05em", lineHeight: 1.3 }}
-                >
-                  {cat.title}
-                </h3>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+      <div ref={gridRef} className="container-page relative z-10 grid grid-cols-2 gap-2">
+        {categories.map((cat, i) => (
+          <CategoryCard
+            key={cat.n}
+            cat={cat}
+            index={i}
+            inView={gridInView}
+            sizes="50vw"
+            radius={10}
+          />
+        ))}
       </div>
     </section>
   );
@@ -105,8 +122,6 @@ function EventCategoriesMobile() {
 // ─── Desktop: полный sticky-parallax эффект ──────────────────────────────────
 function EventCategoriesDesktop() {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const headRef = useRef<HTMLDivElement>(null);
-  const headInView = useInView(headRef, { once: true, margin: "-20px" });
   const gridRef = useRef<HTMLDivElement>(null);
   const gridInView = useInView(gridRef, { once: true, margin: "-20px" });
 
@@ -166,67 +181,17 @@ function EventCategoriesDesktop() {
           style={{ y: contentY }}
           className="absolute inset-x-0 z-10 will-change-transform"
         >
-          <div className="container-page pt-14 md:pt-16">
-            <motion.div
-              ref={headRef}
-              initial={{ opacity: 0, y: 20 }}
-              animate={headInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="mb-10 md:mb-16"
-            >
-              <p className="eyebrow text-white/35 mb-4">Специализация</p>
-              <h2
-                className="font-display font-black text-white"
-                style={{ fontSize: "clamp(36px, 7vw, 104px)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
-              >
-                Для каких событий.
-              </h2>
-            </motion.div>
-
+          <div className="container-page pt-20 md:pt-24">
             <div ref={gridRef} className="grid grid-cols-3 gap-4">
               {categories.map((cat, i) => (
-                <motion.div
+                <CategoryCard
                   key={cat.n}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={gridInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.6, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
-                  className="group cursor-default"
-                >
-                  <div
-                    className="relative overflow-hidden"
-                    style={{ aspectRatio: "3/4", borderRadius: 12 }}
-                  >
-                    <Image
-                      src={cat.photo}
-                      alt={cat.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      sizes="33vw"
-                    />
-                    <div
-                      className="absolute inset-0"
-                      style={{ background: "linear-gradient(to bottom, rgba(2,6,23,0.05) 0%, rgba(2,6,23,0.75) 100%)" }}
-                    />
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{ background: "rgba(33,85,255,0.15)" }}
-                    />
-                    <span
-                      className="absolute top-2 left-3 font-display font-black tabular-nums"
-                      style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", letterSpacing: "0.06em" }}
-                    >
-                      {cat.n}
-                    </span>
-                  </div>
-                  <div className="mt-2 px-0.5">
-                    <h3
-                      className="font-display font-black text-white/70 group-hover:text-white transition-colors duration-300 uppercase"
-                      style={{ fontSize: "clamp(9px, 1.1vw, 14px)", letterSpacing: "0.05em", lineHeight: 1.3 }}
-                    >
-                      {cat.title}
-                    </h3>
-                  </div>
-                </motion.div>
+                  cat={cat}
+                  index={i}
+                  inView={gridInView}
+                  sizes="33vw"
+                  radius={12}
+                />
               ))}
             </div>
           </div>
@@ -250,8 +215,6 @@ export function EventCategories() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  // SSR / first paint — рендерим десктоп-версию (безопасно для SEO, нет layout shift на десктопе)
   if (!mounted) return <EventCategoriesDesktop />;
-
   return isMobile ? <EventCategoriesMobile /> : <EventCategoriesDesktop />;
 }

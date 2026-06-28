@@ -22,8 +22,8 @@ export default function Home() {
         <Services />        {/* БЛОК 4 — ЧТО ЦЕНИТ ЗАКАЗЧИК */}
         <EventCategories /> {/* БЛОК 5 — 6 категорий мероприятий */}
         <GallerySection />  {/* Галерея — marquee фото */}
-        <Team />            {/* Команда — ч/б + violet rim */}
         <CTA />             {/* БЛОК 7 — СВЯЗАТЬСЯ С НАМИ */}
+        <Team />            {/* Команда — ч/б + violet rim */}
       </main>
       <Footer />
     </>

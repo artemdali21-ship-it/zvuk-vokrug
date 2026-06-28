@@ -7,8 +7,6 @@ import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
 
 export function Team() {
   const sectionRef = useRef<HTMLElement>(null);
-  const headRef = useRef<HTMLDivElement>(null);
-  const headInView = useInView(headRef, { once: true, margin: "-60px" });
   const photoRef = useRef<HTMLDivElement>(null);
   const photoInView = useInView(photoRef, { once: true, margin: "-80px" });
 
@@ -27,23 +25,6 @@ export function Team() {
       style={{ background: "#020617" }}
     >
       <NoiseOverlay />
-
-      <div className="container-page relative z-10 mb-16 md:mb-20">
-        <motion.div
-          ref={headRef}
-          initial={{ opacity: 0, y: 24 }}
-          animate={headInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <p className="eyebrow text-white/35 mb-5">Люди за звуком</p>
-          <h2
-            className="font-display font-black text-white"
-            style={{ fontSize: "clamp(48px, 7vw, 104px)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
-          >
-            Команда.
-          </h2>
-        </motion.div>
-      </div>
 
       {/* Parallax photo frame — fixed height container, photo scrolls slower */}
       <motion.div

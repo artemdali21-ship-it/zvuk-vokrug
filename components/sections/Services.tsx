@@ -77,15 +77,21 @@ export function Services() {
           ))}
         </div>
 
-        {/* Connector phrase */}
+        {/* Перебивка — крупный слайд-тезис */}
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={gridInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-center text-white/40 text-base md:text-lg max-w-3xl mx-auto mt-20 md:mt-28"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 48 }}
+          initial={{ opacity: 0, y: 24 }}
+          animate={gridInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="font-display font-black text-white/70 text-center mt-20 md:mt-32"
+          style={{
+            fontSize: "clamp(28px, 5vw, 72px)",
+            lineHeight: 1.05,
+            letterSpacing: "-0.04em",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
+            paddingTop: "clamp(48px, 6vw, 80px)",
+          }}
         >
-          Мы создаем технические решения для событий любого масштаба – от камерных концертов до городских праздников с десятками тысяч зрителей
+          Мы создаем технические решения<br className="hidden md:block" /> для событий любого масштаба
         </motion.p>
       </div>
     </section>
