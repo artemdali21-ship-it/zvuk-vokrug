@@ -10,21 +10,6 @@ export function Footer() {
         className="container-page"
         style={{ paddingTop: "clamp(64px, 8vw, 96px)", paddingBottom: "max(clamp(64px, 8vw, 96px), env(safe-area-inset-bottom, 0px))" }}
       >
-        {/* Brand wordmark — atmospheric anchor */}
-        <div className="mb-16 md:mb-20">
-          <Link
-            href="/"
-            className="font-display font-black text-white/12 hover:text-white/20 transition-colors duration-300 inline-block select-none"
-            style={{
-              fontSize: "clamp(56px, 9vw, 128px)",
-              letterSpacing: "-0.055em",
-              lineHeight: 0.88,
-            }}
-          >
-            ЗВУК<br />ВОКРУГ
-          </Link>
-        </div>
-
         {/* Grid */}
         <div
           className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto_auto] gap-10 md:gap-16"

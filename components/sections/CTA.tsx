@@ -14,7 +14,7 @@ export function CTA() {
   return (
     <section
       ref={ref}
-      className="relative overflow-hidden py-24 md:py-40"
+      className="relative overflow-hidden pt-24 pb-12 md:pt-40 md:pb-12"
       style={{ background: "#0A1B63" }}
     >
       {/* bg-room photo */}

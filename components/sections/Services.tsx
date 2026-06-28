@@ -39,7 +39,6 @@ export function Services() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="mb-20 md:mb-28"
         >
-          <p className="eyebrow text-white/35 mb-5">Что ценит заказчик</p>
           <h2
             className="font-display font-black text-white"
             style={{ fontSize: "clamp(48px, 7vw, 104px)", lineHeight: 0.92, letterSpacing: "-0.055em" }}

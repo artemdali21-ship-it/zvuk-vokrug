@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
-import { ParallaxObject } from "@/components/ui/ParallaxObject";
 
 // ─── Blue AetherHero shader ───────────────────────────────────────────────────
 const VERT = `#version 300 es
@@ -71,7 +70,6 @@ function useShader(canvasRef: React.RefObject<HTMLCanvasElement | null>, active:
     const gl = canvas.getContext("webgl2", { alpha: true, antialias: false });
     if (!gl) return;
 
-    // Compile
     const compile = (src: string, type: number) => {
       const sh = gl.createShader(type)!;
       gl.shaderSource(sh, src);
@@ -88,7 +86,6 @@ function useShader(canvasRef: React.RefObject<HTMLCanvasElement | null>, active:
     gl.deleteShader(fs);
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
 
-    // Buffer
     const buf = gl.createBuffer()!;
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]), gl.STATIC_DRAW);
@@ -136,7 +133,6 @@ function useShader(canvasRef: React.RefObject<HTMLCanvasElement | null>, active:
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export function Hero() {
-  const ref = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
@@ -149,21 +145,11 @@ export function Hero() {
     return () => mq.removeEventListener("change", h);
   }, []);
 
-  const disableParallax = prefersReducedMotion || isMobile;
   const shaderActive = !prefersReducedMotion;
-
-  // Lower DPR on mobile for performance
   useShader(canvasRef, shaderActive, isMobile ? 1 : 2);
-
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-
-  const zvukY   = useTransform(scrollYProgress, [0, 1], disableParallax ? ["0%", "0%"] : ["0%", "-35%"]);
-  const vokrugY = useTransform(scrollYProgress, [0, 1], disableParallax ? ["0%", "0%"] : ["0%", "25%"]);
-  const orbY    = useTransform(scrollYProgress, [0, 1], disableParallax ? ["0%", "0%"] : ["0%", "-15%"]);
 
   return (
     <section
-      ref={ref}
       className="relative min-h-[100dvh] overflow-hidden"
       style={{ background: "#020617" }}
     >
@@ -186,7 +172,7 @@ export function Hero() {
         }}
       />
 
-      {/* Gradient vignette — depth & readability */}
+      {/* Gradient vignette */}
       <div
         aria-hidden
         style={{
@@ -200,26 +186,8 @@ export function Hero() {
 
       <NoiseOverlay />
 
-      {/* Galaxy accent — desktop only */}
-      {!isMobile && (
-        <ParallaxObject
-          src="/3d/obj-galaxy.png"
-          width="clamp(420px, 65vw, 820px)"
-          top="0%"
-          right="-18vw"
-          parallax={0.3}
-          opacity={0.18}
-          zIndex={5}
-          float
-          sizes="1100px"
-        />
-      )}
-
-      {/* ЗВУК */}
-      <motion.div
-        style={{ y: zvukY }}
-        className={`absolute inset-0 z-10 flex items-start justify-start pointer-events-none ${!isMobile ? "will-change-transform" : ""}`}
-      >
+      {/* ЗВУК — fixed, no parallax */}
+      <div className="absolute inset-0 z-10 flex items-start justify-start pointer-events-none">
         <motion.span
           initial={{ y: 48, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -236,29 +204,10 @@ export function Hero() {
         >
           ЗВУК
         </motion.span>
-      </motion.div>
+      </div>
 
-      {/* Orb — blue glow on top of shader */}
-      <motion.div
-        style={{ y: orbY, paddingTop: isMobile ? "28vh" : undefined }}
-        className={`absolute inset-0 z-20 flex pointer-events-none ${isMobile ? "items-start justify-center" : "items-center justify-center will-change-transform"}`}
-      >
-        <div
-          style={{
-            width: isMobile ? "55vw" : "32vw",
-            aspectRatio: "1",
-            borderRadius: "50%",
-            background: "radial-gradient(circle at 38% 38%, rgba(100,160,255,0.55) 0%, rgba(33,85,255,0.35) 40%, rgba(7,17,51,0.0) 70%)",
-            filter: "blur(2px)",
-          }}
-        />
-      </motion.div>
-
-      {/* ВОКРУГ */}
-      <motion.div
-        style={{ y: vokrugY }}
-        className={`absolute inset-0 z-30 flex items-end justify-end pointer-events-none ${!isMobile ? "will-change-transform" : ""}`}
-      >
+      {/* ВОКРУГ — fixed, no parallax */}
+      <div className="absolute inset-0 z-30 flex items-end justify-end pointer-events-none">
         <motion.span
           initial={{ y: 48, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -275,7 +224,7 @@ export function Hero() {
         >
           ВОКРУГ
         </motion.span>
-      </motion.div>
+      </div>
 
       {/* Bottom content */}
       <motion.div
@@ -283,49 +232,60 @@ export function Hero() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.5 }}
         className="absolute bottom-0 left-0 right-0 z-40"
-        style={{
-          paddingBottom: "max(clamp(48px, 7vh, 80px), env(safe-area-inset-bottom, 0px))",
-          paddingLeft: "clamp(20px, 5vw, 80px)",
-          paddingRight: "clamp(20px, 5vw, 80px)",
-        }}
       >
-        <p
-          className="font-display font-black text-white mb-3"
-          style={{ fontSize: "clamp(20px, 3.5vw, 52px)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
+        {/* Main content block */}
+        <div
+          style={{
+            paddingLeft: "clamp(20px, 5vw, 80px)",
+            paddingRight: "clamp(20px, 5vw, 80px)",
+          }}
         >
-          ЗВУК&nbsp;&nbsp;СВЕТ&nbsp;&nbsp;СЦЕНА&nbsp;&nbsp;ЭКРАНЫ
-        </p>
-
-        <p className="text-white/60 text-sm md:text-lg mb-6 mt-3 max-w-xl">
-          комплексное техническое обеспечение мероприятий
-        </p>
-
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 mb-8">
-          <a
-            href="mailto:fmpuzikov@gmail.com?subject=Запрос%20предложения"
-            className="btn-primary inline-flex items-center justify-center px-6 py-3 rounded-full font-bold text-sm tracking-wide uppercase text-white"
+          <p
+            className="font-display font-black text-white mb-3"
+            style={{ fontSize: "clamp(20px, 3.5vw, 52px)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
           >
-            Получить предложение
-          </a>
-          <a
-            href="tel:+79033710400"
-            className="text-white/60 text-sm hover:text-white transition-colors duration-200 underline-offset-4 hover:underline"
-          >
-            позвонить Фёдору
-          </a>
+            ЗВУК&nbsp;&nbsp;СВЕТ&nbsp;&nbsp;СЦЕНА&nbsp;&nbsp;ЭКРАНЫ
+          </p>
+
+          <p className="text-white/60 text-sm md:text-lg mb-6 mt-3 max-w-xl">
+            комплексное техническое обеспечение мероприятий
+          </p>
+
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 mb-8">
+            <a
+              href="mailto:fmpuzikov@gmail.com?subject=Запрос%20предложения"
+              className="btn-primary inline-flex items-center justify-center px-6 py-3 rounded-full font-bold text-sm tracking-wide uppercase text-white"
+            >
+              Получить предложение
+            </a>
+            <a
+              href="tel:+79033710400"
+              className="text-white/60 text-sm hover:text-white transition-colors duration-200 underline-offset-4 hover:underline"
+            >
+              позвонить Фёдору
+            </a>
+          </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-10 pt-2">
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-white/35">
-            Волгоград · Элиста · Астрахань · Саратов
+        {/* Locations — full-width display text at bottom */}
+        <div
+          style={{
+            paddingLeft: "clamp(20px, 5vw, 80px)",
+            paddingBottom: "max(clamp(32px, 5vh, 56px), env(safe-area-inset-bottom, 0px))",
+            borderTop: "1px solid rgba(255,255,255,0.07)",
+            paddingTop: "clamp(16px, 2vh, 24px)",
+          }}
+        >
+          <p
+            className="font-display font-black text-white/45 select-none"
+            style={{
+              fontSize: "clamp(22px, 4.5vw, 64px)",
+              letterSpacing: "-0.04em",
+              lineHeight: 0.92,
+            }}
+          >
+            Волгоград&nbsp;·&nbsp;Элиста&nbsp;·&nbsp;Астрахань&nbsp;·&nbsp;Саратов
           </p>
-          <div className="hidden sm:flex gap-5 overflow-x-auto scrollbar-none">
-            {["Scorpions · Лепс · ЛЮБЭ", "Газпром · Министерство культуры", "Парад Победы · 9 Мая", "ParkSeason Festival"].map((item, i) => (
-              <span key={i} className="text-[11px] font-bold tracking-[0.1em] uppercase text-white/20 whitespace-nowrap shrink-0">
-                {item}
-              </span>
-            ))}
-          </div>
         </div>
       </motion.div>
     </section>
