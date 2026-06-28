@@ -110,12 +110,14 @@ function useShader(canvasRef: React.RefObject<HTMLCanvasElement | null>, active:
 }
 
 // ─── Animation variants ───────────────────────────────────────────────────────
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 const lineVariant = {
   hidden: { y: "110%", opacity: 0 },
   visible: (i: number) => ({
     y: "0%",
     opacity: 1,
-    transition: { duration: 0.85, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.85, delay: i * 0.12, ease: EASE },
   }),
 };
 
@@ -124,7 +126,7 @@ const fadeVariant = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, delay: 0.5 + i * 0.1, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.7, delay: 0.5 + i * 0.1, ease: EASE },
   }),
 };
 
